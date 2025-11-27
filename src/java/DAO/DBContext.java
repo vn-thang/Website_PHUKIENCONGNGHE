@@ -13,9 +13,9 @@ public class DBContext {
     // Thay đổi các thông số này cho phù hợp với cấu hình XAMPP của bạn
     private static final String HOSTNAME = "localhost";
     private static final String PORT = "3306";
-    private static final String DBNAME = "phukiencongnghe"; // Tên database bạn đã tạo
+    private static final String DBNAME = "phukiencongnghe";
     private static final String USERNAME = "root";
-    private static final String PASSWORD = ""; // Mật khẩu root của XAMPP mặc định là rỗng
+    private static final String PASSWORD = ""; 
 
     /**
      * Lấy kết nối đến cơ sở dữ liệu MySQL.
@@ -46,8 +46,6 @@ public class DBContext {
         }
         return conn;
     }
-    
-    // Bạn có thể thêm một phương thức main để test kết nối ngay tại đây
     public static void main(String[] args) {
         try {
             Connection conn = getConnection();

@@ -161,16 +161,7 @@ public class OrderDAO {
         }
     }
 
-    /**
-     * HÀM MỚI: Lấy tổng doanh thu cho một tháng/năm cụ thể.
-     *
-     * @param year Năm
-     * @param month Tháng (1-12)
-     * @return Tổng doanh thu
-     */
-    /**
-     * [ĐÃ SỬA] Tính tổng doanh thu của CẢ THÁNG (Chỉ tính đơn thành công).
-     */
+   
     public double getTotalRevenueForMonth(int year, int month) {
         String query = "SELECT SUM(TongTien) AS TongDoanhThu "
                 + "FROM donhang "
