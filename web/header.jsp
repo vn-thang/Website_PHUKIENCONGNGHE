@@ -426,7 +426,7 @@ button,
     padding: 6px 14px !important;
     font-weight: 600;
     border: none !important;
-    margin-left: -200px !important;
+    margin-left: -120px !important;
 }
 
 .category-toggle-btn:hover {
