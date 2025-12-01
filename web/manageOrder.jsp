@@ -93,7 +93,7 @@
 
                         <td>
                             <c:choose>
-                                <c:when test="${o.trangThai == 'Dang xu ly'}">
+                                <c:when test="${o.trangThai == 'Đang xử lý'}">
                                     <span class="badge badge-warning-custom">${o.trangThai}</span>
                                 </c:when>
 
@@ -101,7 +101,7 @@
                                     <span class="badge badge-info-custom">${o.trangThai}</span>
                                 </c:when>
 
-                                <c:when test="${o.trangThai == 'Da giao'}">
+                                <c:when test="${o.trangThai == 'Đã giao'}">
                                     <span class="badge bg-success">${o.trangThai}</span>
                                 </c:when>
 

@@ -10,9 +10,10 @@
 
     <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 <style>
+    /*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> */
 /* ======= TONE CAM ======= */
 body {
     background-color: #fffaf4;
@@ -177,6 +178,78 @@ body {
     color: var(--main-orange);
     margin-bottom: 12px;
 }
+
+/* CSS STYLE SHOPEE */
+    .shopee-bg { background-color: #fff; }
+    .text-shopee-orange { color: #ee4d2d; }
+    .text-star-gold { color: #ffc107; }
+    .text-star-gray { color: #e4e5e9; }
+    
+    /* Header tổng quan */
+    .review-header-container {
+        background-color: #fffbf8; border: 1px solid #f9ede5;
+        padding: 30px; border-radius: 4px; display: flex; align-items: center;
+    }
+    .average-score { font-size: 40px; color: #ee4d2d; }
+    
+    /* Danh sách review */
+    .review-item { padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,.09); display: flex; }
+    .shopee-avatar { width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; }
+    .reviewer-name { font-size: 12px; font-weight: bold; }
+    .review-time { font-size: 12px; color: rgba(0,0,0,.54); }
+    .review-text { font-size: 14px; margin-top: 5px; color: rgba(0,0,0,.87); }
+
+    /* Form đánh giá */
+    .shopee-review-form { background: #fafafa; padding: 20px; border: 1px solid #e5e5e5; border-radius: 4px; margin-top: 20px; }
+    .starrating { display: inline-flex; flex-direction: row-reverse; }
+    .starrating > input { display: none; }
+    .starrating > label { color: #ccc; font-size: 30px; margin: 0 2px; cursor: pointer; }
+    .starrating > label:before { content: "★"; }
+    .starrating > input:checked ~ label,
+    .starrating > label:hover, .starrating > label:hover ~ label { color: #ffc107; }
+    
+    .shopee-textarea { width: 100%; padding: 10px; border: 1px solid #ddd; margin-top: 10px; font-size: 14px; }
+    .btn-shopee-submit { background-color: #ee4d2d; color: white; border: none; padding: 8px 25px; margin-top: 10px; cursor: pointer; }
+    .btn-shopee-submit:hover { background-color: #d03e1e; }
+    /* CSS Nút bộ lọc */
+.filter-btn {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.09);
+    padding: 5px 15px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    border-radius: 2px;
+    color: rgba(0,0,0,.8);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    color: #ee4d2d;
+    border-color: #ee4d2d;
+}
+/* Trạng thái đang chọn */
+.filter-btn.active {
+    border-color: #ee4d2d;
+    color: #ee4d2d;
+    background: #fff; /* Hoặc màu nhạt hơn nếu thích */
+}
+
+/* Nút Xem thêm */
+.btn-load-more {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    text-align: center;
+    cursor: pointer;
+}
+.btn-load-more:hover { background: #f8f8f8; }
+
+/* Class ẩn dùng cho JS */
+.d-none-custom { display: none !important; }
 </style>
 
 </head>
@@ -249,6 +322,111 @@ body {
             </div>
         </div>
 
+            
+        <div class="mt-5 p-4 shadow-sm rounded bg-white">
+    <h4 class="mb-4">ĐÁNH GIÁ SẢN PHẨM</h4>
+
+    <div class="review-header-container mb-4">
+        <div class="mr-5 text-center">
+            <div>
+                <span class="average-score">${avgVote}</span>
+                <span class="text-shopee-orange" style="font-size: 20px;"> trên 5</span>
+            </div>
+            <div class="text-star-gold" style="font-size: 24px;">
+                 <c:forEach begin="1" end="5" var="i">
+                    <c:choose>
+                        <c:when test="${i <= avgVote}">★</c:when>
+                        <c:otherwise><span class="text-star-gray">★</span></c:otherwise>
+                    </c:choose>
+                </c:forEach>
+            </div>
+        </div>
+        
+        <div class="d-flex flex-wrap align-items-center">
+            <button class="filter-btn active" onclick="filterReviews('all', this)">Tất cả (${countReview})</button>
+            <button class="filter-btn" onclick="filterReviews('5', this)">5 Sao</button>
+            <button class="filter-btn" onclick="filterReviews('4', this)">4 Sao</button>
+            <button class="filter-btn" onclick="filterReviews('3', this)">3 Sao</button>
+            <button class="filter-btn" onclick="filterReviews('2', this)">2 Sao</button>
+            <button class="filter-btn" onclick="filterReviews('1', this)">1 Sao</button>
+            <button class="filter-btn" onclick="filterReviews('comment', this)">Có Bình luận</button>
+        </div>
+    </div>
+
+    <c:if test="${canReview}">
+        <div class="shopee-review-form mb-4">
+            <h6 class="text-success mb-2">✍️ Viết đánh giá của bạn (Còn ${luotConLai} lượt)</h6>
+            <form action="review" method="post">
+                <input type="hidden" name="pid" value="${productDetail.maSanPham}">
+                
+                <div class="d-flex align-items-center">
+                    <span class="mr-3">Chất lượng sản phẩm:</span>
+                    <div class="starrating">
+                        <input type="radio" id="star5" name="rating" value="5" checked /><label for="star5" title="Tuyệt vời"></label>
+                        <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="Tốt"></label>
+                        <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="Bình thường"></label>
+                        <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="Kém"></label>
+                        <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="Tệ"></label>
+                    </div>
+                    <span class="ml-2 text-warning" id="rating-text">Tuyệt vời</span>
+                </div>
+                
+                <textarea name="comment" class="shopee-textarea" rows="4" placeholder="Hãy chia sẻ nhận xét cho sản phẩm này bạn nhé!" required></textarea>
+                
+                <div class="text-right">
+                    <button type="submit" class="btn-shopee-submit">Gửi Đánh Giá</button>
+                </div>
+            </form>
+        </div>
+        <script>
+            const labels = {1:'Tệ', 2:'Kém', 3:'Bình thường', 4:'Tốt', 5:'Tuyệt vời'};
+            document.querySelectorAll('.starrating input').forEach(i => {
+                i.addEventListener('change', function() { document.getElementById('rating-text').innerText = labels[this.value]; });
+            });
+        </script>
+    </c:if>
+    
+    <c:if test="${!canReview}">
+        <div class="alert alert-secondary mt-3 mb-4"><i class="fa fa-info-circle"></i> ${reviewMessage}</div>
+    </c:if>
+
+    <div class="review-list" id="reviewContainer">
+        
+        <c:forEach items="${listReview}" var="r" varStatus="status">
+            <div class="review-item ${status.index >= 5 ? 'hidden-init' : ''}" 
+                 data-star="${r.soSao}" 
+                 data-has-comment="${not empty r.noiDung && r.noiDung.length() > 0}">
+                 
+                <img class="shopee-avatar" src="https://ui-avatars.com/api/?name=${r.tenUser}&background=random&color=fff" alt="User">
+                
+                <div style="flex: 1;">
+                    <div class="reviewer-name">${r.tenUser}</div>
+                    <div class="d-flex align-items-center">
+                        <span class="text-star-gold mr-2">
+                            <c:forEach begin="1" end="5" var="i">
+                                <c:choose><c:when test="${i <= r.soSao}">★</c:when><c:otherwise><span class="text-star-gray">★</span></c:otherwise></c:choose>
+                            </c:forEach>
+                        </span>
+                        <span class="review-time">${r.ngayDanhGia} | Phân loại hàng: Mặc định</span>
+                    </div>
+                    <div class="review-text">${r.noiDung}</div>
+                </div>
+            </div>
+        </c:forEach>
+
+        <c:if test="${countReview == 0}">
+            <p class="text-center text-muted py-4">Chưa có đánh giá nào.</p>
+        </c:if>
+        
+        <p id="no-result-msg" class="text-center text-muted py-4 d-none-custom">Không có đánh giá nào phù hợp với bộ lọc này.</p>
+    </div>
+
+    <c:if test="${countReview > 5}">
+        <div id="toggleReviewBtn" class="btn-load-more" onclick="toggleReviews()" data-expanded="false">
+            Xem thêm đánh giá <i class="fas fa-chevron-down ml-1"></i>
+        </div>
+    </c:if>
+</div>
         <!-- Sản phẩm liên quan -->
         <c:if test="${not empty relatedProducts}">
             <div class="related-products-container">
@@ -291,6 +469,113 @@ body {
 </div>
 
 <jsp:include page="footer.jsp"/>
+<script>
+    // CSS class ban đầu để ẩn các review thứ 6 trở đi
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .hidden-init { display: none; } 
+    `;
+    document.head.appendChild(style);
 
+    // 1. HÀM LỌC ĐÁNH GIÁ
+    function filterReviews(criteria, btnElement) {
+        // A. Xử lý giao diện nút bấm (Active)
+        // Xóa class active ở tất cả các nút
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        // Thêm class active vào nút vừa bấm
+        btnElement.classList.add('active');
+
+        // B. Xử lý ẩn/hiện review
+        const reviews = document.querySelectorAll('.review-item');
+        let countVisible = 0;
+
+        reviews.forEach(review => {
+            const star = review.getAttribute('data-star');
+            const hasComment = review.getAttribute('data-has-comment');
+
+            let isMatch = false;
+
+            if (criteria === 'all') {
+                isMatch = true;
+            } else if (criteria === 'comment') {
+                isMatch = (hasComment === 'true');
+            } else {
+                // Lọc theo số sao (1, 2, 3, 4, 5)
+                isMatch = (star === criteria);
+            }
+
+            if (isMatch) {
+                review.classList.remove('d-none-custom'); // Hiện
+                countVisible++;
+            } else {
+                review.classList.add('d-none-custom'); // Ẩn
+            }
+            
+            // QUAN TRỌNG: Khi đã lọc thì bỏ qua chế độ "Xem thêm" (Hiện tất cả kết quả tìm được)
+            review.classList.remove('hidden-init'); 
+        });
+
+        // C. Xử lý thông báo "Không tìm thấy" và nút "Xem thêm"
+        const noResultMsg = document.getElementById('no-result-msg');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+        // Nếu không có kết quả nào -> Hiện thông báo
+        if (countVisible === 0) {
+            noResultMsg.classList.remove('d-none-custom');
+        } else {
+            noResultMsg.classList.add('d-none-custom');
+        }
+
+        // Khi đang lọc thì ẩn nút "Xem thêm" đi (vì đã show hết kết quả lọc rồi)
+        if (loadMoreBtn) {
+            if (criteria === 'all' && ${countReview} > 5) {
+                // Nếu bấm lại "Tất cả" mà số lượng > 5 thì logic hơi phức tạp xíu
+                // Để đơn giản: Khi bấm lại Tất cả -> Hiện hết luôn, khỏi ẩn lại.
+                loadMoreBtn.style.display = 'none'; 
+            } else {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+    }
+
+    // 2. HÀM XEM THÊM (Chỉ dùng cho mặc định ban đầu)
+    function toggleReviews() {
+        const btn = document.getElementById('toggleReviewBtn');
+        const isExpanded = btn.getAttribute('data-expanded') === 'true';
+        const hiddenItems = document.querySelectorAll('.review-item');
+
+        if (!isExpanded) {
+            // === TRƯỜNG HỢP 1: BẤM ĐỂ MỞ RỘNG ===
+            hiddenItems.forEach(item => {
+                // Xóa class ẩn để hiện ra hết
+                item.classList.remove('hidden-init');
+            });
+
+            // Đổi giao diện nút
+            btn.innerHTML = 'Thu gọn <i class="fas fa-chevron-up ml-1"></i>';
+            btn.setAttribute('data-expanded', 'true');
+            
+        } else {
+            // === TRƯỜNG HỢP 2: BẤM ĐỂ THU GỌN ===
+            hiddenItems.forEach((item, index) => {
+                // Nếu là cái thứ 6 trở đi (index >= 5) thì ẩn lại
+                if (index >= 5) {
+                    item.classList.add('hidden-init');
+                }
+            });
+
+            // Đổi giao diện nút về ban đầu
+            btn.innerHTML = 'Xem thêm đánh giá <i class="fas fa-chevron-down ml-1"></i>';
+            btn.setAttribute('data-expanded', 'false');
+
+            // [QUAN TRỌNG] Tự động cuộn lên đầu phần đánh giá (UX xịn)
+            // Tìm cái thẻ bao quanh danh sách review để cuộn tới đó
+            document.querySelector('.review-header-container').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        }
+    }
+</script>
 </body>
 </html>
