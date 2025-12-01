@@ -272,6 +272,314 @@
             .row-cols-md-4 > * {
     padding: 12px !important;
 }
+
+/* --- 1. KHUNG BAO NGOÀI (QUAN TRỌNG NHẤT) --- */
+.hotline-btn-wrapper {
+    position: fixed; /* Ép cố định vào màn hình */
+    bottom: 110px;   /* Cách đáy 110px (để nhường chỗ cho con bot ở dưới) */
+    right: 30px;     /* Cách phải 30px */
+    z-index: 999999;
+    width: 60px;
+    height: 60px;
+    /* Căn icon vào giữa */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hotline-animation {
+    /* Đảm bảo animation nằm giữa khung 60px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Vòng tròn viền ngoài (Lan tỏa) */
+.c-circle {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    background-color: transparent;
+    border-radius: 100%;
+    border: 2px solid #e60808;
+    opacity: .5;
+    animation: ring-circle-anim 1.2s infinite ease-in-out;
+}
+
+/* Vòng tròn nền mờ */
+.c-circle-fill {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-color: rgba(230, 8, 8, 0.7);
+    border-radius: 100%;
+    border: 2px solid transparent;
+    animation: ring-circle-fill-anim 2.3s infinite ease-in-out;
+}
+
+/* Vòng tròn chứa Icon (Nút chính) */
+.c-img-circle {
+    background-color: #e60808;
+    width: 40px; /* Kích thước nút đỏ */
+    height: 40px;
+    border-radius: 100%;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: ring-circle-img-anim 1s infinite ease-in-out;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.c-img-circle a {
+    display: flex;
+    color: #fff;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+
+/* --- KEYFRAMES (HIỆU ỨNG RUNG) --- */
+@keyframes ring-circle-anim {
+    0% { transform: rotate(0) scale(0.5) skew(1deg); opacity: 0.1; }
+    30% { transform: rotate(0) scale(0.7) skew(1deg); opacity: 0.5; }
+    100% { transform: rotate(0) scale(1) skew(1deg); opacity: 0.1; }
+}
+
+@keyframes ring-circle-fill-anim {
+    0% { transform: rotate(0) scale(0.7) skew(1deg); opacity: 0.2; }
+    50% { transform: rotate(0) scale(1) skew(1deg); opacity: 0.2; }
+    100% { transform: rotate(0) scale(0.7) skew(1deg); opacity: 0.2; }
+}
+
+@keyframes ring-circle-img-anim {
+    0% { transform: rotate(0) scale(1) skew(1deg); }
+    10% { transform: rotate(-25deg) scale(1) skew(1deg); }
+    20% { transform: rotate(25deg) scale(1) skew(1deg); }
+    30% { transform: rotate(-25deg) scale(1) skew(1deg); }
+    40% { transform: rotate(25deg) scale(1) skew(1deg); }
+    50% { transform: rotate(0) scale(1) skew(1deg); }
+    100% { transform: rotate(0) scale(1) skew(1deg); }
+}
+/* --- CSS CHO NÚT CHATBOT (Phía dưới) --- */
+.chatbot-toggler {
+    position: fixed;
+    bottom: 50px;
+    right: 35px; /* Căn thẳng hàng với nút gọi ở trên */
+    outline: none;
+    border: none;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #007bff; /* Màu xanh chatbot */
+    transition: all 0.2s ease;
+    z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.chatbot-toggler i {
+    color: #fff;
+    font-size: 22px;
+}
+
+.chatbot-toggler:hover {
+    transform: scale(1.1);
+}
+
+/* --- CSS CHO CỬA SỔ CHAT --- */
+.chat-window-container {
+    position: fixed;
+    right: /*35px;*/ 90px;
+    bottom: /*90px;*/ 20px;
+    width: 300px;
+    height: 450px; /* Chiều cao khung chat */
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 128px 0 rgba(0,0,0,0.1), 0 32px 64px -48px rgba(0,0,0,0.5);
+     display: none;
+    flex-direction: column;
+    z-index: 999999;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    transform-origin: bottom right;
+}
+
+.chat-header {
+    background: #007bff;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 45px;
+}
+
+.chat-title {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chat-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+    background: #f1f5f9;
+    font-size: 12px;
+    min-height: 0; /* Quan trọng cho flex */
+    display: block;
+}
+
+.chat-footer {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    padding: 8px 10px;
+    border-top: 1px solid #eee; /* Màu viền nhẹ hơn cho tinh tế */
+    background: #fff;
+    min-height: 60px; 
+}
+
+.chat-footer input {
+    /* [QUAN TRỌNG] Thêm flex: 1 để ô nhập tự co giãn chiếm hết chỗ trống */
+    flex: 1; 
+    
+    border: 1px solid #ddd; /* Viền nhạt hơn */
+    outline: none;
+    height: 36px;
+    border-radius: 16px; /* Bo tròn mềm mại hơn (hình viên thuốc) */
+    padding: 0 12px;
+    font-size: 12px; /* Tăng nhẹ 1px cho dễ đọc */
+    background: #f9f9f9; /* Màu nền xám nhẹ cho hiện đại */
+}
+
+.chat-footer button {
+    margin-left: 8px; /* Giảm khoảng cách chút cho gọn */
+    background: #007bff;
+    color: white;
+    border: none;
+    
+    /* [QUAN TRỌNG] Bo tròn thành hình tròn hoàn hảo */
+    border-radius: 50%; 
+    
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    
+    /* [QUAN TRỌNG] Căn giữa icon tuyệt đối */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    transition: background 0.2s; /* Hiệu ứng chuyển màu mượt */
+}
+
+.chat-footer button i {
+    font-size: 12px;
+    /* Mẹo nhỏ: Icon máy bay thường bị lệch trái do cái đuôi, dịch sang phải 1 xíu để cân mắt */
+    margin-left: -2px; 
+    margin-top: 1px;
+}
+
+.chat-footer button:hover {
+    background: #0056b3; /* Đổi màu khi di chuột vào */
+}
+
+/* --- SỬA LẠI ĐOẠN TIN NHẮN (CHO CHẮC CHẮN HIỆN CHỮ) --- */
+.message {
+    margin-bottom: 15px;
+    display: flex;
+    width: 100%; /* Đảm bảo tin nhắn chiếm chiều rộng */
+}
+.bot-message { justify-content: flex-start; }
+.user-message { justify-content: flex-end; }
+
+/* Ép hiển thị tin nhắn bằng mọi giá */
+.msg-content {
+    max-width: 80%;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    border-radius: 12px;
+    word-wrap: break-word;   /* Tự xuống dòng nếu chữ quá dài */
+    word-break: break-word;  /* Ngăn vỡ giao diện */
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+     flex-shrink: 0; 
+}
+
+.bot-message .msg-content {
+    background: #fff !important;    /* Ép nền trắng */
+    color: #333 !important;         /* Ép chữ đen */
+    border: 1px solid #e5e5e5;
+    border-bottom-left-radius: 0;
+}
+
+.user-message .msg-content {
+    background: #007bff !important; /* Ép nền xanh */
+    color: #fff !important;         /* Ép chữ trắng */
+    border-bottom-right-radius: 0;
+}
+
+/* --- PHẦN GỢI Ý CÂU HỎI (FAQ) --- */
+
+.faq-section {
+    margin-top: 8px;
+    padding: 0 5px;
+}
+
+.faq-header-text {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    font-weight: 400;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+    padding: 0 5px;
+    margin-bottom: 8px;
+}
+
+.faq-btn {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #555;
+    font-size: 12px !important;;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 0;
+}
+
+.faq-btn:hover {
+    background: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+
         </style>
     </head>
 
@@ -463,6 +771,70 @@
             </c:if>
 
         </div>
+                
+<div class="hotline-btn-wrapper">
+    <div class="hotline-animation">
+        <div class="c-circle"></div>
+        <div class="c-circle-fill"></div>
+        <div class="c-img-circle">
+            <a href="https://zalo.me/0961531720" target="_blank">
+                <i class="fas fa-phone-alt"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="chatbot-toggler" onclick="toggleChatWindow()">
+    <i class="fas fa-robot" id="chatIcon"></i>
+    <i class="fas fa-times" id="closeIcon" style="display: none;"></i>
+</div>
+
+<div class="chat-window-container" id="chatWindow">
+    
+    <div class="chat-header">
+        <div class="chat-title">
+            <i class="fas fa-robot"></i> Trợ lý ảo TStore
+        </div>
+        <button onclick="toggleChatWindow()" class="close-btn">&times;</button>
+    </div>
+    
+   <div class="chat-body" id="chatBody">
+        
+        <div class="message bot-message">
+            <div class="msg-content">
+                Xin chào! 👋<br>
+                Mình là trợ lý ảo của TStore.<br>
+                Bạn cần hỗ trợ vấn đề gì ạ?
+            </div>
+        </div>
+
+        <div class="faq-section">
+            <p class="faq-header-text">Câu hỏi thường gặp:</p>
+            
+            <div class="faq-list">
+                <button class="faq-btn" onclick="sendQuickMessage('Chính sách bảo hành')">
+                    🛡️ Chính sách bảo hành
+                </button>
+                
+                <button class="faq-btn" onclick="sendQuickMessage('Phí vận chuyển bao nhiêu')">
+                    🚚 Phí vận chuyển
+                </button>
+                
+                <button class="faq-btn" onclick="sendQuickMessage('Địa chỉ shop ở đâu')">
+                    📍 Địa chỉ cửa hàng
+                </button>
+                
+                <button class="faq-btn" onclick="sendQuickMessage('Cách thức thanh toán')">
+                    💳 Cách thức thanh toán
+                </button>
+            </div>
+        </div>
+  </div>
+    
+    <div class="chat-footer">
+        <input type="text" id="userInput" placeholder="Nhập tin nhắn..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+</div>
+</div>    
 
         <jsp:include page="footer.jsp" />
 
@@ -488,6 +860,147 @@
                 prevBtn.addEventListener("click", prevSlide);
                 setInterval(nextSlide, 4000);
             }
-        </script>
+
+// --- HÀM BẬT/TẮT CHATBOT (Dành cho HTML có onclick="toggleChatWindow()") ---
+  document.addEventListener("DOMContentLoaded", function () {
+
+        // Gán hàm vào window để HTML có thể gọi onclick="toggleChatWindow()"
+        window.toggleChatWindow = function () {
+
+            const chatWindow = document.getElementById('chatWindow') 
+                || document.querySelector('.chat-window-container');
+
+            const chatIcon = document.getElementById('chatIcon');
+            const closeIcon = document.getElementById('closeIcon');
+
+            if (!chatWindow) {
+                console.error("Không tìm thấy #chatWindow");
+                return;
+            }
+
+            const isHidden = window.getComputedStyle(chatWindow).display === 'none';
+
+            if (isHidden) {
+                chatWindow.style.display = 'flex';
+
+                if (chatIcon) chatIcon.style.display = 'none';
+                if (closeIcon) closeIcon.style.display = 'block';
+            } else {
+                chatWindow.style.display = 'none';
+
+                if (chatIcon) chatIcon.style.display = 'block';
+                if (closeIcon) closeIcon.style.display = 'none';
+            }
+        };
+
+    });
+    // --- 2. Gửi tin nhắn khi nhấn Enter ---
+    const userInput = document.getElementById('userInput');
+    if(userInput) {
+        userInput.addEventListener('keypress', function(e){
+            if(e.key === 'Enter') sendMessage();
+        });
+    }
+
+    // --- 3. Gửi tin nhắn khi nhấn nút gửi ---
+    const sendBtn = document.querySelector('.chat-footer button');
+    if(sendBtn) {
+        sendBtn.addEventListener('click', sendMessage);
+    }
+
+    // --- 4. Gửi tin nhắn user ---
+    function sendMessage() {
+        if(!userInput) return;
+        const msg = userInput.value.trim();
+        if(!msg) return;
+        addMessage(msg,'user');
+        userInput.value = '';
+        sendToServer(msg);
+    }
+
+    // --- 5. Hiển thị tin nhắn trên giao diện ---
+  // --- 5. Hiển thị tin nhắn trên giao diện (ĐÃ SỬA GIAO DIỆN TÁCH RỜI) ---
+    function addMessage(msg, sender='bot') {
+        const chatBody = document.getElementById('chatBody');
+        if(!chatBody) return;
+
+        // Ẩn FAQ nếu là user gửi
+        if(sender === 'user') {
+            const faq = document.querySelector('.faq-section');
+            if(faq) faq.style.display = 'none';
+        }
+
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+        messageDiv.style.display = 'flex';
+        messageDiv.style.justifyContent = sender === 'user' ? 'flex-end' : 'flex-start';
+        messageDiv.style.marginBottom = '10px';
+
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('msg-content');
+        
+        // Cấu hình chung
+        contentDiv.style.wordWrap = 'break-word';
+
+        // === [PHẦN QUAN TRỌNG NHẤT] ===
+        
+        if (sender === 'bot') {
+            // NẾU LÀ BOT:
+            // 1. Nền trong suốt (Để tách rời bong bóng chữ và nút bấm)
+            // 2. Xóa padding (Để các phần tử con tự căn chỉnh)
+            contentDiv.style.background = 'transparent'; 
+         //   contentDiv.style.padding = '0';
+            contentDiv.style.boxShadow = 'none';
+            contentDiv.style.color = '#000';
+            contentDiv.style.maxWidth = '100%'; // Cho phép rộng ra để chứa nút dài
+            
+            // Xếp dọc (để lời dẫn ở trên, nút ở dưới)
+            contentDiv.style.display = 'flex';
+            contentDiv.style.flexDirection = 'column';
+            contentDiv.style.gap = '5px'; 
+            
+            contentDiv.innerHTML = msg; // Bắt buộc dùng innerHTML để hiện nút/ảnh
+        } else {
+            // NẾU LÀ USER:
+            // Giữ nguyên giao diện bong bóng xanh truyền thống
+            contentDiv.style.background = '#007bff';
+            contentDiv.style.color = '#fff';
+            contentDiv.style.padding = '10px 15px';
+            contentDiv.style.borderRadius = '15px';
+            contentDiv.style.maxWidth = '80%';
+            contentDiv.style.boxShadow = '0 1px 2px rgba(0,0,0,0.1)';
+            
+            contentDiv.textContent = msg; // Dùng textContent cho an toàn
+        }
+
+        // ===============================
+
+        messageDiv.appendChild(contentDiv);
+        chatBody.appendChild(messageDiv);
+
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    // --- 6. Gửi tin nhắn tới server ---
+    function sendToServer(msg) {
+        fetch('${pageContext.request.contextPath}/ChatServlet', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
+            body: 'msg=' + encodeURIComponent(msg)
+        })
+        .then(response => response.text())
+        .then(data => addMessage(data,'bot'))
+        .catch(err => console.error(err));
+    }
+    // --- 7. FAQ buttons ---
+   
+    window.sendQuickMessage = function(text) {
+        // 1. Hiện tin nhắn của khách lên màn hình
+        addMessage(text, 'user');
+        
+        // 2. Gửi về Server để Bot trả lời
+        sendToServer(text);
+    };
+</script>
     </body>
 </html>

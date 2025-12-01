@@ -6,6 +6,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+
 <style>
 /* ===========================================
    COLOR PALETTE
@@ -536,6 +537,7 @@ button,
           <li><a class="dropdown-item" href="manager-product">Quản Lý Sản Phẩm</a></li>
           <li><a class="dropdown-item" href="manage-user">Quản Lý Tài Khoản</a></li>
           <li><a class="dropdown-item" href="manage-order">Quản Lý Đơn Hàng</a></li>
+          <li><a class="dropdown-item" href="managerBot">Quản Lý Chat Bot</a></li>
           <li><a class="dropdown-item" href="statistic">Xem Thống Kê</a></li>
                     
 
