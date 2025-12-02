@@ -31,13 +31,16 @@ public class ManagerBotServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8"); // Để nhận tiếng Việt
+        
         String action = request.getParameter("action");
         BotDAO dao = new BotDAO();
 
         try {
+            // --- LOAD DANH SÁCH (Mặc định) ---
             if (action == null) {
                 List<ChuDeBot> list = dao.getAllTopics();
                 List<String> listLoi = dao.getUnansweredQuestions();
@@ -45,19 +48,45 @@ public class ManagerBotServlet extends HttpServlet {
                 request.setAttribute("listBot", list);
                 request.setAttribute("listLoi", listLoi);
                 
-                // Chuyển sang trang JSP tên mới
-                request.getRequestDispatcher("/managerBot.jsp").forward(request, response);
+                // Chuyển sang trang JSP quản lý
+                request.getRequestDispatcher("managerBot.jsp").forward(request, response);
             } 
             
-            // --- CÁC CHỨC NĂNG (Gửi về URL /manager-bot) ---
+            // --- CÁC CHỨC NĂNG XỬ LÝ (POST/GET) ---
             
             else if (action.equals("add_topic")) {
+                // 1. Lấy dữ liệu từ Form
                 String ten = request.getParameter("ten");
                 String loai = request.getParameter("loai");
                 String phanHoi = request.getParameter("phanhoi");
-                dao.addTopic(ten, loai, phanHoi);
-                response.sendRedirect("managerBot"); 
+                
+                // 2. Lấy dữ liệu ẩn (ID log lỗi & Câu hỏi làm từ khóa)
+                String logIdRaw = request.getParameter("logIdToDelete");
+                String autoKeyword = request.getParameter("autoKeyword");
+
+                // 3. Thêm chủ đề mới và lấy ID vừa tạo
+                int newTopicId = dao.addNewTopic(ten, loai, phanHoi);
+                
+                // 4. Nếu thêm chủ đề thành công
+                if (newTopicId > 0) {
+                    // A. Tự động thêm từ khóa (nếu có câu hỏi từ log)
+                    if (autoKeyword != null && !autoKeyword.trim().isEmpty()) {
+                        dao.addKeyword(newTopicId, autoKeyword.trim());
+                    }
+
+                    // B. Xóa dòng log lỗi (nếu có ID được gửi lên)
+                    if (logIdRaw != null && !logIdRaw.trim().isEmpty()) {
+                        try {
+                            int logId = Integer.parseInt(logIdRaw);
+                            dao.deleteLog(logId); 
+                        } catch (NumberFormatException e) {
+                            System.out.println("Lỗi parse log ID: " + e.getMessage());
+                        }
+                    }
+                }
+                response.sendRedirect("managerBot");
             } 
+            
             else if (action.equals("update_topic")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 String ten = request.getParameter("ten");
@@ -72,6 +101,7 @@ public class ManagerBotServlet extends HttpServlet {
                 int id = Integer.parseInt(request.getParameter("id"));
                 String tuKhoa = request.getParameter("tukhoa");
                 if (tuKhoa != null && !tuKhoa.isEmpty()) {
+                    // Cho phép nhập nhiều từ khóa cách nhau bằng dấu phẩy
                     String[] arr = tuKhoa.split(",");
                     for (String k : arr) {
                         dao.addKeyword(id, k.trim());
@@ -95,7 +125,7 @@ public class ManagerBotServlet extends HttpServlet {
             
             else if (action.equals("delete_log")) {
                 int id = Integer.parseInt(request.getParameter("id"));
-                dao.deleteUnanswered(id);
+                dao.deleteLog(id); // Gọi hàm xóa log (đã đổi tên cho chuẩn)
                 response.sendRedirect("managerBot");
             }
             

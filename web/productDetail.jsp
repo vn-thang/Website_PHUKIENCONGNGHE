@@ -409,8 +409,20 @@ body {
                         </span>
                         <span class="review-time">${r.ngayDanhGia} | Phân loại hàng: Mặc định</span>
                     </div>
-                    <div class="review-text">${r.noiDung}</div>
-                </div>
+                     <div class="review-text">${r.noiDung}</div>
+                     
+                     <c:if test="${not empty r.phanHoi}">
+    <div class="mt-3 p-3 rounded" style="background-color: #f6f6f6; border: 1px solid #eee;">
+        <div style="font-size: 13px; color: #ee4d2d; font-weight: bold; margin-bottom: 5px;">
+            Phản hồi của Người Bán:
+        </div>
+        <div style="font-size: 14px; color: #555;">
+            ${r.phanHoi}
+        </div>
+    </div>
+</c:if>
+
+                </div>               
             </div>
         </c:forEach>
 
@@ -567,7 +579,6 @@ body {
             // Đổi giao diện nút về ban đầu
             btn.innerHTML = 'Xem thêm đánh giá <i class="fas fa-chevron-down ml-1"></i>';
             btn.setAttribute('data-expanded', 'false');
-
             // [QUAN TRỌNG] Tự động cuộn lên đầu phần đánh giá (UX xịn)
             // Tìm cái thẻ bao quanh danh sách review để cuộn tới đó
             document.querySelector('.review-header-container').scrollIntoView({ 
