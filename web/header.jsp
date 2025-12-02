@@ -40,7 +40,7 @@ a { color: var(--text-dark); text-decoration: none; }
    NAVBAR
    =========================================== */
 .navbar.shopee-nav {
-  background: #ffffff;
+  background: #f8f2f2;
   padding: 1rem 0;
   border-bottom: 1px solid var(--border-soft);
   position: fixed;

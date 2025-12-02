@@ -472,6 +472,43 @@ public class OrderDAO {
         }
         return false;
     }
+    // ... (Các hàm cũ giữ nguyên)
+
+    // 1. Đếm tổng số đơn hàng đã bán thành công
+    public int countTotalOrders() {
+        String query = "SELECT COUNT(*) FROM donhang WHERE TrangThai = 'Da giao' OR TrangThai = 'Da Thanh Toan'";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
+
+    // 2. Đếm tổng số khách hàng
+    public int countTotalUsers() {
+        String query = "SELECT COUNT(*) FROM nguoidung WHERE VaiTro != 'admin'"; // Chỉ đếm khách
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return 0;
+    }
     private void closeResources() {
         try {
             if (rs != null) {

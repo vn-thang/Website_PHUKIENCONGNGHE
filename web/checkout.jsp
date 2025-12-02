@@ -233,6 +233,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    
                     <div class="d-flex justify-content-between"><span>Tiền hàng:</span> <span id="confSubTotal"></span></div>
                     <div class="d-flex justify-content-between"><span>Phí vận chuyển:</span> <span id="confShip"></span></div>
                     <div class="d-flex justify-content-between text-danger"><span>Voucher:</span> <span id="confVoucher"></span></div>
