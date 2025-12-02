@@ -538,6 +538,7 @@ button,
           <li><a class="dropdown-item" href="manage-user">Quản Lý Tài Khoản</a></li>
           <li><a class="dropdown-item" href="manage-order">Quản Lý Đơn Hàng</a></li>
           <li><a class="dropdown-item" href="managerBot">Quản Lý Chat Bot</a></li>
+           <li><a class="dropdown-item" href="admin-reviews">Quản Lý đánh giá</a></li>
           <li><a class="dropdown-item" href="statistic">Xem Thống Kê</a></li>
                     
 

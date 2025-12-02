@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import model.Product;
 import model.Review;
 /**
  *
@@ -18,18 +19,22 @@ public class ReviewDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    // 1. Lấy danh sách Review của 1 sản phẩm
+    // 1. Lấy danh sách Review của 1 sản phẩm (Chỉ lấy cái TrangThai = 1)
     public List<Review> getAllReviews(int pid) {
         List<Review> list = new ArrayList<>();
-        // Giả sử bảng Account có cột 'user' là tên đăng nhập
-        String query = "SELECT r.*, a.TenDangNhap FROM DanhGia r JOIN NguoiDung a ON r.MaNguoiDung = a.MaNguoiDung WHERE r.MaSanPham = ? ORDER BY r.MaDanhGia DESC";
+        // [CẬP NHẬT]: Thêm điều kiện r.TrangThai = 1
+        String query = "SELECT r.*, a.TenDangNhap FROM DanhGia r " +
+                       "JOIN NguoiDung a ON r.MaNguoiDung = a.MaNguoiDung " +
+                       "WHERE r.MaSanPham = ? AND r.TrangThai = 1 " + 
+                       "ORDER BY r.MaDanhGia DESC";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, pid);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Review(
+                // Sử dụng Constructor cũ
+                Review r = new Review(
                     rs.getInt("MaDanhGia"),
                     rs.getInt("MaNguoiDung"),
                     rs.getInt("MaSanPham"),
@@ -37,34 +42,40 @@ public class ReviewDAO {
                     rs.getString("NoiDung"),
                     rs.getDate("NgayDanhGia"),
                     rs.getString("TenDangNhap")
-                ));
+                );
+                
+                // [MỚI] Set thêm dữ liệu từ 2 cột mới
+                r.setTrangThai(rs.getInt("TrangThai"));
+                r.setPhanHoi(rs.getString("PhanHoi"));
+                
+                list.add(r);
             }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 
-    // 2. Tính điểm sao trung bình (VD: 4.5)
+    // 2. Tính điểm sao trung bình (Chỉ tính những đánh giá được hiện)
     public double getAverageRating(int pid) {
-        String query = "SELECT AVG(CAST(SoSao AS FLOAT)) FROM DanhGia WHERE MaSanPham = ?";
+        // [CẬP NHẬT]: Thêm TrangThai = 1 để tính điểm chính xác hơn
+        String query = "SELECT AVG(CAST(SoSao AS FLOAT)) FROM DanhGia WHERE MaSanPham = ? AND TrangThai = 1";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, pid);
             rs = ps.executeQuery();
             if (rs.next()) {
-                // Làm tròn 1 chữ số thập phân
                 return Math.round(rs.getDouble(1) * 10.0) / 10.0;
             }
         } catch (Exception e) { e.printStackTrace(); }
         return 0;
     }
 
-    // 3. Đếm số lần MUA THÀNH CÔNG (Logic cốt lõi)
+    // 3. Đếm số lần MUA THÀNH CÔNG
     public int countLuotMua(int uID, int pid) {
-        // [LƯU Ý]: Bạn cần kiểm tra lại cột Status=4 trong DB của bạn có phải là "Hoàn thành" không nhé
+        // [LƯU Ý]: Kiểm tra kỹ trạng thái 'Da giao' hay 'Đã giao' trong DB của bạn
         String query = "SELECT COUNT(*) FROM DonHang o " +
                        "JOIN ChiTietDonHang od ON o.MaDonHang = od.MaDonHang " +
-                       "WHERE o.MaNguoiDung = ? AND od.MaSanPham = ? AND o.TrangThai = N'Da giao'"; 
+                       "WHERE o.MaNguoiDung = ? AND od.MaSanPham = ? AND o.TrangThai = N'Đã giao'"; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
@@ -90,8 +101,9 @@ public class ReviewDAO {
         return 0;
     }
 
-    // 5. Thêm Review mới
+    // 5. Thêm Review mới (Khách hàng)
     public void insertReview(int uID, int pid, int sao, String noiDung) {
+        // Mặc định TrangThai = 1 và PhanHoi = NULL (do thiết lập DB)
         String query = "INSERT INTO DanhGia(MaNguoiDung, MaSanPham, SoSao, NoiDung) VALUES (?, ?, ?, ?)";
         try {
             conn = new DBContext().getConnection();
@@ -100,6 +112,79 @@ public class ReviewDAO {
             ps.setInt(2, pid);
             ps.setInt(3, sao);
             ps.setNString(4, noiDung);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    // =================================================================
+    // PHẦN 2: DÀNH CHO ADMIN (QUẢN LÝ) - [MỚI THÊM]
+    // =================================================================
+
+    // 6. [ADMIN] Lấy TẤT CẢ đánh giá (Cả ẩn và hiện) để quản lý
+    public List<Review> getAllReviewsForAdmin() {
+    List<Review> list = new ArrayList<>();
+
+    String query = "SELECT r.*, a.TenDangNhap, p.TenSanPham, p.HinhAnh " +
+                   "FROM DanhGia r " +
+                   "JOIN NguoiDung a ON r.MaNguoiDung = a.MaNguoiDung " +
+                   "JOIN SanPham p ON r.MaSanPham = p.MaSanPham " +
+                   "ORDER BY r.NgayDanhGia DESC";
+
+    try {
+        conn = new DBContext().getConnection();
+        ps = conn.prepareStatement(query);
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            Review r = new Review();
+            r.setMaDanhGia(rs.getInt("MaDanhGia"));
+            r.setMaNguoiDung(rs.getInt("MaNguoiDung"));
+            r.setMaSanPham(rs.getInt("MaSanPham"));
+            r.setSoSao(rs.getInt("SoSao"));
+            r.setNoiDung(rs.getNString("NoiDung"));
+            r.setNgayDanhGia(rs.getDate("NgayDanhGia"));
+            r.setTenUser(rs.getString("TenDangNhap"));
+            r.setTrangThai(rs.getInt("TrangThai"));
+            r.setPhanHoi(rs.getString("PhanHoi"));
+
+            // Set Product
+            Product p = new Product();
+            p.setMaSanPham(rs.getInt("MaSanPham"));
+            p.setTenSanPham(rs.getString("TenSanPham"));
+            p.setHinhAnh(rs.getString("HinhAnh"));
+
+            r.setProduct(p);
+
+            list.add(r);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
+    // 7. [ADMIN] Trả lời đánh giá & Cập nhật trạng thái (Ẩn/Hiện)
+    public void updateReviewAdmin(int maDanhGia, String phanHoi, int trangThai) {
+        String query = "UPDATE DanhGia SET PhanHoi = ?, TrangThai = ? WHERE MaDanhGia = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setNString(1, phanHoi);
+            ps.setInt(2, trangThai);
+            ps.setInt(3, maDanhGia);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    // 8. [ADMIN] Xóa vĩnh viễn đánh giá (Nếu cần)
+    public void deleteReview(int maDanhGia) {
+        String query = "DELETE FROM DanhGia WHERE MaDanhGia = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, maDanhGia);
             ps.executeUpdate();
         } catch (Exception e) { e.printStackTrace(); }
     }
