@@ -217,9 +217,9 @@
                                     </li>
                                 </ul>
                                 <div class="d-grid gap-2 mt-3">
-                                    <button type="button" class="btn btn-shopee-checkout" data-bs-toggle="modal" data-bs-target="#checkoutModal">
-                                        <i class="fas fa-truck"></i> Thanh Toán (COD)
-                                    </button>
+                                   <button type="button" class="btn btn-buy-now text-black rounded-0" id="btn-go-checkout" disabled>
+    Tiến Hành Thanh Toán <span id="buy-count">(0)</span>
+</button>
                                     <div id="paypal-button-container" class="mt-3" style="display:none;"></div>
                                 </div>
                             </div>
@@ -272,164 +272,137 @@
 
 
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+       <script>
+    document.addEventListener('DOMContentLoaded', function () {
 
-                // --- DOM ---
-                const selectAllCheckbox = document.getElementById('select-all-checkbox');
-                const itemCheckboxes = document.querySelectorAll('.item-checkbox');
-                const totalDisplayVND = document.getElementById('selected-total-display-vnd');
-                const totalDisplayUSD = document.getElementById('selected-total-display-usd');
-                const exchangeRate = parseFloat('<c:out value="${exchangeRate}" default="25000" />');
+        // --- 1. KHAI BÁO DOM ELEMENTS ---
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+        
+        // Nơi hiển thị tổng tiền
+        const totalDisplayVND = document.getElementById('selected-total-display-vnd');
+        const totalDisplayUSD = document.getElementById('selected-total-display-usd'); // Có thể giữ hoặc bỏ nếu không dùng
+        const buyCountSpan = document.getElementById('buy-count'); // Span hiển thị số lượng (0)
+        
+        // Tỷ giá (Lấy từ server hoặc mặc định)
+        const exchangeRate = parseFloat('<c:out value="${exchangeRate}" default="25000" />');
 
-                const modalElement = document.getElementById('checkoutModal');
-                const modal = new bootstrap.Modal(modalElement); // Khởi tạo modal
-                const modalSummaryContainer = document.getElementById('modal-products-summary');
+        // Nút "Tiến Hành Thanh Toán" (Lưu ý: ID này phải khớp với nút bạn đã sửa ở HTML)
+        const btnGoCheckout = document.getElementById('btn-go-checkout');
 
-                const checkoutForm = document.getElementById('checkoutForm');
-                const paypalContainer = document.getElementById('paypal-button-container');
 
-                // --- FUNCTIONS ---
-                function updateSelectedTotal() {
-                    let newTotalVND = 0;
-                    let allAreChecked = true;
-                    let itemsSelected = false;
+        // --- 2. HÀM TÍNH TOÁN TỔNG TIỀN ---
+        function updateSelectedTotal() {
+            let newTotalVND = 0;
+            let count = 0;
+            let allAreChecked = true;
+            let hasItems = itemCheckboxes.length > 0;
 
-                    itemCheckboxes.forEach(box => {
-                        if (box.checked) {
-                            newTotalVND += parseFloat(box.closest('.cart-item-row').dataset.price);
-                            itemsSelected = true;
-                        } else {
-                            allAreChecked = false;
-                        }
-                    });
+            if (!hasItems) allAreChecked = false;
 
-                    selectAllCheckbox.checked = allAreChecked && itemsSelected;
-
-                    totalDisplayVND.textContent = newTotalVND.toLocaleString('vi-VN', {style: 'currency', currency: 'VND', minimumFractionDigits: 0});
-                    let newTotalUSD = (newTotalVND / exchangeRate).toFixed(2);
-                    totalDisplayUSD.textContent = '$' + newTotalUSD;
+            itemCheckboxes.forEach(box => {
+                if (box.checked) {
+                    // Lấy giá tiền từ data-price của dòng tương ứng
+                    // Giả định HTML của bạn có class 'cart-item-row' và data-price chứa tổng tiền item đó
+                    const row = box.closest('.cart-item-row');
+                    const price = parseFloat(row.dataset.price); 
+                    
+                    newTotalVND += price;
+                    count++;
+                } else {
+                    allAreChecked = false;
                 }
+            });
 
-                function updateModalSummary() {
-                    modalSummaryContainer.innerHTML = '';
-                    const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
-                    let newTotalVND = 0;
+            // Cập nhật trạng thái checkbox "Chọn tất cả"
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = allAreChecked && hasItems;
+            }
 
-                    if (checkedBoxes.length === 0) {
-                        modalSummaryContainer.innerHTML = `
-                <li class="list-group-item text-danger">Bạn chưa chọn sản phẩm nào.</li>
-            `;
-                        return;
-                    }
-
-                    checkedBoxes.forEach(box => {
-                        const name = box.dataset.name;
-                        const image = box.dataset.image;
-                        const quantity = box.dataset.quantity;
-                        const price = parseFloat(box.dataset.totalPrice);
-                        newTotalVND += price;
-
-                        const itemHTML = `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <img src="${image}" class="rounded me-2"
-                             style="width:45px;height:45px;object-fit:contain;">
-                        <div>
-                            <h6 class="my-0">${name}</h6>
-                            <small class="text-muted">SL: ${quantity}</small>
-                        </div>
-                    </div>
-                    <span class="text-danger">
-            ${price.toLocaleString('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-              minimumFractionDigits: 0
-              })}
-                    </span>
-                </li>
-            `;
-
-                        modalSummaryContainer.insertAdjacentHTML('beforeend', itemHTML);
-                    });
-
-                    const totalHTML = `
-            <li class="list-group-item d-flex justify-content-between bg-light">
-                <strong>Tổng cộng</strong>
-                <strong class="text-danger fs-5">
-            ${newTotalVND.toLocaleString('vi-VN', {
-              style: 'currency',
-              currency: 'VND',
-              minimumFractionDigits: 0
-              })}
-                </strong>
-            </li>
-        `;
-
-                    modalSummaryContainer.insertAdjacentHTML('beforeend', totalHTML);
-                }
-
-
-                function addHiddenInputsToForm() {
-                    checkoutForm.querySelectorAll('input[name="selectedProducts"]').forEach(e => e.remove());
-
-                    const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
-
-                    if (checkedBoxes.length === 0) {
-                        alert('Bạn chưa chọn sản phẩm nào.');
-                        return false;
-                    }
-
-                    checkedBoxes.forEach(box => {
-                        const hidden = document.createElement('input');
-                        hidden.type = 'hidden';
-                        hidden.name = 'selectedProducts';
-                        hidden.value = box.value;
-                        checkoutForm.appendChild(hidden);
-                    });
-
-                    return true;
-                }
-
-                // --- EVENTS ---
-                checkoutForm.addEventListener('submit', event => {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    if (!checkoutForm.checkValidity()) {
-                        checkoutForm.classList.add('was-validated');
-                        return;
-                    }
-
-                    if (addHiddenInputsToForm()) {
-                        if (!checkoutForm.querySelector('input[name="paymentMethod"]')) {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'paymentMethod';
-                            input.value = 'cod';
-                            checkoutForm.appendChild(input);
-                        }
-                        // sửa gọi submit đúng biến
-                        checkoutForm.submit();
-                    }
-                }, false);
-
-                modalElement.addEventListener('show.bs.modal', function (event) {
-                    updateModalSummary();
+            // Hiển thị tổng tiền VND
+            if (totalDisplayVND) {
+                totalDisplayVND.textContent = newTotalVND.toLocaleString('vi-VN', {
+                    style: 'currency', 
+                    currency: 'VND', 
+                    minimumFractionDigits: 0
                 });
+            }
 
-                selectAllCheckbox.addEventListener('change', () => {
-                    itemCheckboxes.forEach(b => b.checked = selectAllCheckbox.checked);
-                    updateSelectedTotal();
+            // Hiển thị tổng tiền USD (nếu có)
+            if (totalDisplayUSD) {
+                let newTotalUSD = (newTotalVND / exchangeRate).toFixed(2);
+                totalDisplayUSD.textContent = '$' + newTotalUSD;
+            }
+
+            // Hiển thị số lượng đã chọn trên nút
+            if (buyCountSpan) {
+                buyCountSpan.textContent = '(' + count + ')';
+            }
+
+            // Enable/Disable nút thanh toán
+            if (btnGoCheckout) {
+                btnGoCheckout.disabled = count === 0;
+            }
+        }
+
+
+        // --- 3. XỬ LÝ SỰ KIỆN CHECKBOX ---
+
+        // Sự kiện click "Chọn tất cả"
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function () {
+                itemCheckboxes.forEach(box => {
+                    box.checked = selectAllCheckbox.checked;
                 });
-
-                itemCheckboxes.forEach(b => b.addEventListener('change', () => {
-                        updateSelectedTotal();
-                    }));
-
-                // init
                 updateSelectedTotal();
             });
-        </script>
+        }
+
+        // Sự kiện click từng checkbox sản phẩm
+        itemCheckboxes.forEach(box => {
+            box.addEventListener('change', function () {
+                updateSelectedTotal();
+            });
+        });
+
+
+        // --- 4. XỬ LÝ SỰ KIỆN CLICK "TIẾN HÀNH THANH TOÁN" ---
+        if (btnGoCheckout) {
+            btnGoCheckout.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn chặn hành vi mặc định
+
+                // Lấy danh sách các checkbox đang được chọn
+                const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
+
+                if (checkedBoxes.length === 0) {
+                    alert("Vui lòng chọn ít nhất 1 sản phẩm để thanh toán!");
+                    return;
+                }
+
+                // --- TẠO FORM ẨN ĐỂ GỬI DỮ LIỆU SANG checkout.jsp ---
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'checkout.jsp'; // Chuyển hướng sang trang checkout mới
+
+                // Duyệt qua từng sản phẩm đã chọn
+                checkedBoxes.forEach(cb => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'selectedProductIds'; // Tham số này sẽ được checkout.jsp đọc
+                    input.value = cb.value; // Value này là ID sản phẩm (hoặc ID item trong giỏ)
+                    form.appendChild(input);
+                });
+
+                // Gắn form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+
+        // --- 5. KHỞI TẠO ---
+        // Tính toán lại tổng tiền khi load trang (phòng trường hợp trình duyệt lưu cache checkbox)
+        updateSelectedTotal();
+    });
+</script>
     </body>
 </html>

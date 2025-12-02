@@ -283,6 +283,98 @@ public class UserDAO {
         return false; // Email không tồn tại hoặc chỉ thuộc về user hiện tại
     }
 
+    
+    
+    // ================================================================
+    // CÁC HÀM MỚI CHO CHỨC NĂNG QUÊN MẬT KHẨU (FORGOT PASSWORD)
+    // ================================================================
+
+    /**
+     * 1. Kiểm tra tài khoản có tồn tại qua Email hay không.
+     * Tên hàm: checkAccountByEmail (Thay vì checkEmailExist)
+     */
+    public boolean checkAccountByEmail(String email) {
+        String query = "SELECT MaNguoiDung FROM nguoidung WHERE Email = ?";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return true; // Email có tồn tại
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    /**
+     * 2. Lưu mã OTP (Token) và cài đặt thời gian hết hạn (ví dụ: 10 phút).
+     * Tên hàm: updateRecoveryToken (Thay vì updateResetToken)
+     */
+    public void updateRecoveryToken(String email, String token) {
+        // Cập nhật mã xác thực và set thời gian hết hạn là NOW() + 10 phút
+        String query = "UPDATE nguoidung SET MaXacThuc = ?, ThoiGianHetHan = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE Email = ?";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, token);
+            ps.setString(2, email);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+    }
+
+    /**
+     * 3. Xác minh mã OTP có đúng và còn hạn sử dụng không.
+     * Tên hàm: validateOtp (Thay vì checkToken)
+     */
+    public boolean validateOtp(String email, String otp) {
+        // Kiểm tra 3 điều kiện: Email đúng, Mã đúng, Thời gian chưa hết hạn (> NOW)
+        String query = "SELECT MaNguoiDung FROM nguoidung WHERE Email = ? AND MaXacThuc = ? AND ThoiGianHetHan > NOW()";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            ps.setString(2, otp);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return true; // Mã hợp lệ
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+        return false;
+    }
+
+    /**
+     * 4. Đặt lại mật khẩu mới và xóa mã OTP cũ.
+     * Tên hàm: changePasswordAfterReset (Thay vì updatePassword)
+     */
+    public void changePasswordAfterReset(String email, String newPassword) {
+        String query = "UPDATE nguoidung SET MatKhau = ?, MaXacThuc = NULL, ThoiGianHetHan = NULL WHERE Email = ?";
+        try {
+            conn = DBContext.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, newPassword); // Lưu ý: newPassword nên được mã hóa (SHA-256) trước khi truyền vào đây
+            ps.setString(2, email);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources();
+        }
+    }
+    
+    
     private void closeResources() {
         try {
             if (rs != null) {

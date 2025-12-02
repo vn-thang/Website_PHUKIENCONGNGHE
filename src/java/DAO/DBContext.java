@@ -12,8 +12,8 @@ import java.sql.SQLException;
 public class DBContext {
     // Thay đổi các thông số này cho phù hợp với cấu hình XAMPP của bạn
     private static final String HOSTNAME = "localhost";
-    private static final String PORT = "3306";
-    private static final String DBNAME = "phukiencongnghe";
+    private static final String PORT = "3366";
+    private static final String DBNAME = "phukiencongnghe_db";
     private static final String USERNAME = "root";
     private static final String PASSWORD = ""; 
 

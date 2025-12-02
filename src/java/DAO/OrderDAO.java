@@ -217,8 +217,8 @@ public class OrderDAO {
         }
         return dailyMap;
     }
-     
-    public String createOrder(User user, Cart cart, String hoTenGiaoHang, String sdtGiaoHang, String diaChiGiaoHang, String trangThai) {
+     ///////////////////////////User user, Cart cart, String hoTenGiaoHang, String sdtGiaoHang, String diaChiGiaoHang, String trangThai
+    public String createOrder(User user, Cart cart, String hoTenGiaoHang, String sdtGiaoHang, String diaChiGiaoHang, String trangThai, double finalTotalPrice) {
 
         // [SỬA ĐỔI] Thêm cột 'NgayDat' và 'TrangThai'
         String insertOrderSQL = "INSERT INTO donhang (MaNguoiDung, TongTien, HoTenNguoiNhan, SDTNguoiNhan, DiaChiNhanHang, TrangThai, NgayDat) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -254,7 +254,7 @@ public class OrderDAO {
             // BƯỚC 2: TẠO ĐƠN HÀNG
             ps = conn.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, user.getMaNguoiDung());
-            ps.setDouble(2, cart.getTotalCartPrice());
+            ps.setDouble(2, finalTotalPrice);
             ps.setString(3, hoTenGiaoHang);
             ps.setString(4, sdtGiaoHang);
             ps.setString(5, diaChiGiaoHang);
@@ -314,6 +314,7 @@ public class OrderDAO {
             closeResources();
         }
     }
+
 
     public Order getOrderByIdAndUserID(int maDonHang, int maNguoiDung) {
         String sql = "SELECT MaDonHang, NgayDat, TongTien, TrangThai, HoTenNguoiNhan, SDTNguoiNhan, DiaChiNhanHang "

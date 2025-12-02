@@ -169,9 +169,9 @@
             <button type="submit" class="btn btn-login">Đăng nhập</button>
         </form>
 
-        <div class="text-center mt-3 text-muted">
-            <a href="forgot-password.jsp" class="forgot-link">Quên mật khẩu?</a>
-        </div>
+        
+            <a href="forgotPassword" class="float-end text-decoration-none">Quên mật khẩu?</a>
+       
         <div class="text-center mt-3 text-muted">
             Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
         </div>
