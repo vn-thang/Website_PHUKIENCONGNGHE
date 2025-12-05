@@ -75,7 +75,7 @@ public class ReviewDAO {
         // [LƯU Ý]: Kiểm tra kỹ trạng thái 'Da giao' hay 'Đã giao' trong DB của bạn
         String query = "SELECT COUNT(*) FROM DonHang o " +
                        "JOIN ChiTietDonHang od ON o.MaDonHang = od.MaDonHang " +
-                       "WHERE o.MaNguoiDung = ? AND od.MaSanPham = ? AND o.TrangThai = N'Đã giao'"; 
+                       "WHERE o.MaNguoiDung = ? AND od.MaSanPham = ? AND o.TrangThai = N'Da giao'"; 
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);

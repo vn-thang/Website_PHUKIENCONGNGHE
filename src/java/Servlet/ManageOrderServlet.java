@@ -45,7 +45,7 @@ public class ManageOrderServlet extends HttpServlet {
                 orderDAO.updateOrderStatus(orderId, status);
                 
                 // Quay lại trang chi tiết
-                response.sendRedirect("manage-order?action=view&id=" + orderId);
+                response.sendRedirect("manage-order");
                 return;
             }
         }

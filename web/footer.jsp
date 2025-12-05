@@ -19,9 +19,9 @@
       <div class="col-lg-3 col-md-6 mb-4">
         <h6 class="fw-bold text-uppercase text-warning mb-3">Liên kết nhanh</h6>
         <ul class="list-unstyled">
-          <li><a href="#" class="footer-link">Về chúng tôi</a></li>
-          <li><a href="#" class="footer-link">Chính sách bảo hành</a></li>
-          <li><a href="#" class="footer-link">Hướng dẫn mua hàng</a></li>
+          <li><a href="about.jsp" class="footer-link">Về chúng tôi</a></li>
+          <li><a href="about.jsp" class="footer-link">Chính sách bảo hành</a></li>
+          <li><a href="about.jsp" class="footer-link">Hướng dẫn mua hàng</a></li>
           <li><a href="#" class="footer-link">Liên hệ</a></li>
         </ul>
       </div>

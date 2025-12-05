@@ -6,6 +6,60 @@
 <html>
 <head>
     <title>Chi Tiết Đơn Hàng #${order.maDonHang}</title>
+    <style>
+        .badge-processing {
+    background-color: #ffcc80;
+    color: #663300;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đã thanh toán */
+.badge-paid {
+    background-color: #ff9966;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đang giao */
+.badge-shipping {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đã giao */
+.badge-finished {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đã huỷ */
+.badge-cancel {
+    background-color: #dc3545;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* ========================
+   TIÊU ĐỀ & CARD HEADER
+========================= */
+
+h2, h5 {
+    color: #ff7e27;
+    font-weight: 700;
+}
+
+.card-header {
+    background-color: #ffe0cc;
+    border-bottom: 2px solid #ff7e27;
+}
+       </style> 
 </head>
 <body>
     <jsp:include page="header.jsp" />
@@ -55,11 +109,11 @@
                             <div class="mb-3">
                                 <label for="statusSelect" class="form-label">Trạng Thái Hiện Tại:</label>
                                 <select id="statusSelect" name="status" class="form-select form-select-lg">
-                                    <option value="Dang xu ly" ${order.trangThai == 'Dang xu ly' ? 'selected' : ''}>Đang xử lý</option>
-                                    <option value="Da Thanh Toan" ${order.trangThai == 'Da Thanh Toan' ? 'selected' : ''}>Đã Thanh Toán (PayPal)</option>
-                                    <option value="Dang giao" ${order.trangThai == 'Dang giao' ? 'selected' : ''}>Đang giao</option>
-                                    <option value="Da giao" ${order.trangThai == 'Da giao' ? 'selected' : ''}>Đã giao</giao>
-                                    <option value="Da huy" ${order.trangThai == 'Da huy' ? 'selected' : ''}>Đã hủy</option>
+                                    <option value="Dang xu ly" ${order.trangThai == 'Đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
+                                    <option value="Da Thanh Toan" ${order.trangThai == 'Đã Thanh Toán' ? 'selected' : ''}>Đã Thanh Toán </option>
+                                    <option value="Dang giao" ${order.trangThai == 'Đang giao' ? 'selected' : ''}>Đang giao</option>
+                                    <option value="Da giao" ${order.trangThai == 'Đã giao' ? 'selected' : ''}>Đã giao</giao>
+                                    <option value="Da huy" ${order.trangThai == 'Đã huỷ' ? 'selected' : ''}>Đã hủy</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-success w-100">Cập Nhật</button>

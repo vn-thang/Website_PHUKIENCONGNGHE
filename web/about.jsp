@@ -172,7 +172,7 @@
                          class="img-fluid rounded-4 shadow-lg" alt="Shop Image">
                     <div class="position-absolute bg-white p-3 rounded shadow" style="bottom: -20px; right: -20px; border-left: 5px solid #ff6600;">
                         <div class="fw-bold text-dark">Thành lập từ</div>
-                        <div class="h4 text-danger mb-0">2019</div>
+                        <div class="h4 text-danger mb-0">2025</div>
                     </div>
                 </div>
             </div>
@@ -249,23 +249,17 @@
                     <div class="team-img-box">
                         <img src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg" alt="CEO">
                     </div>
-                    <h5 class="fw-bold mb-1">Nguyễn Văn A</h5>
-                    <div class="team-role">Founder</div>
+                    <h5 class="fw-bold mb-1">Hoàng Xuân Tuấn</h5>
+                    <div class="team-role">Leader</div>
                 </div>
 
-                <div class="col-md-3 col-sm-6 team-member" data-aos="fade-up" data-aos-delay="200">
-                    <div class="team-img-box">
-                        <img src="https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg" alt="Manager">
-                    </div>
-                    <h5 class="fw-bold mb-1">Trần Thị B</h5>
-                    <div class="team-role">Store Manager</div>
-                </div>
+              
 
                 <div class="col-md-3 col-sm-6 team-member" data-aos="fade-up" data-aos-delay="300">
                     <div class="team-img-box">
                         <img src="https://img.freepik.com/free-photo/handsome-young-man-with-new-stylish-haircut_176420-19637.jpg" alt="Support">
                     </div>
-                    <h5 class="fw-bold mb-1">Lê Văn C</h5>
+                    <h5 class="fw-bold mb-1">Vi Ngọc Thắng</h5>
                     <div class="team-role">Tech Lead</div>
                 </div>
 
@@ -273,7 +267,7 @@
                     <div class="team-img-box">
                         <img src="https://img.freepik.com/free-photo/close-up-portrait-curly-handsome-european-male_176532-8133.jpg" alt="Marketing">
                     </div>
-                    <h5 class="fw-bold mb-1">Phạm Thị D</h5>
+                    <h5 class="fw-bold mb-1">Hà Đức Trọng</h5>
                     <div class="team-role">Marketing</div>
                 </div>
             </div>
@@ -294,7 +288,7 @@
     </div>
 
     <jsp:include page="footer.jsp" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+   
     
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>

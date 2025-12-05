@@ -6,104 +6,81 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- Updated version without :root variables (CSS values applied directly) -->
 
 <style>
 /* ===========================================
-   COLOR PALETTE
+   GLOBAL COLORS (direct values instead of :root)
    =========================================== */
-:root {
-  --primary: #ff6f0f;
-  --primary-dark: #d65a3a;
-  --primary-soft: #f4a261;
-  --primary-light: #ffffff;
+/* Primary colors: #ff6f0f, #d65a3a, #f4a261, #ffffff */
+/* Text colors: #2d2d2d, #555 */
+/* Background soft: #fafafa */
+/* Border soft: #f0f0f0 */
 
-  --text-dark: #2d2d2d;
-  --text-light: #555;
-  --bg-soft: #fafafa;
-  --border-soft: #f0f0f0;
-}
-
-
-/* ===========================================
-   GLOBAL
-   =========================================== */
 body {
-   font-family: "Segoe UI", Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   background-color: #fffefe;
   padding-top: 125px;
-  color: var(--text-dark);
+  color: #2d2d2d;
 }
 
-a { color: var(--text-dark); text-decoration: none; }
+a { color: #2d2d2d; text-decoration: none; }
 
-/* ===========================================
-   NAVBAR
-   =========================================== */
+/* NAVBAR */
 .navbar.shopee-nav {
   background: #f8f2f2;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--border-soft);
+  border-bottom: 1px solid #f0f0f0;
   position: fixed;
   width: 100%;
-  z-index: 1200;
- 
-  transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1), 
-              opacity 0.1s ease;
+  z-index: 200;
+  transition: transform 0.1s cubic-bezier(0.25,0.1,0.25,1), opacity 0.1s ease;
   will-change: transform;
-
-
-   
 }
-
 .navbar.shopee-nav.hidden { transform: translateY(-100%); }
 
 .navbar-brand {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary) !important;
+  color: #ff6f0f !important;
 }
 
-/* ===========================================
-   SEARCH BAR
-   =========================================== */
+/* SEARCH BAR */
 .shopee-search-form {
   max-width: 550px;
   width: 100%;
   position: relative;
 }
-
 .shopee-search-form .form-control {
   height: 42px;
   border-radius: 6px;
-  border: 1.5px solid var(--border-soft);
+  border: 1.5px solid #f0f0f0;
   padding-left: 14px;
-  background-color: var(--bg-soft);
+  background-color: #fafafa;
 }
-
 .shopee-search-form .form-control:focus {
-  border-color: var(--primary);
+  border-color: #ff6f0f;
   box-shadow: 0 0 6px rgba(231, 111, 81, 0.25);
 }
-
 .btn-search {
   position: absolute;
   right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--primary);
+  background: #ff6f0f;  
   border: none;
   color: #fff;
-  width: 36px;
-  height: 32px;
-  border-radius: 6px;
-  transition: 0.25s;
+  height: 40px;    /* <-- đổi từ 32px thành 42px */
+  width: 42px;     /* <-- để thành nút vuông, icon cân */
+  border-radius: 8px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.btn-search:hover { background: var(--primary-dark); }
+.btn-search:hover { background: #d65a3a; }
 
-/* ===========================================
-   NAV ICONS
-   =========================================== */
+/* NAV ICONS */
 .nav-icons .nav-link,
 .nav-icons .dropdown-toggle {
   color: #ff7e27;
@@ -112,31 +89,25 @@ a { color: var(--text-dark); text-decoration: none; }
   transition: 0.2s;
   margin-right: 8px;
 }
-
 .nav-icons .nav-link:hover {
-  color: var(--primary);
+  color: #ff6f0f;
 }
 
-.cart-icon {
-  position: relative;
-}
-
+.cart-icon { position: relative; }
 .cart-icon .badge {
   position: absolute;
   top: -5px;
   right: -4px;
   font-size: 0.6rem;
-  background: var(--primary);
+  background: #ff6f0f;
   color: white;
   border: 1px solid #fff;
 }
 
-/* ===========================================
-   CATEGORY BAR
-   =========================================== */
+/* CATEGORY BAR */
 .category-bar {
   background: #fff;
-  border-bottom: 1px solid var(--border-soft);
+  border-bottom: 1px solid #f0f0f0;
   padding: 10px 0;
   position: fixed;
   width: 100%;
@@ -144,78 +115,64 @@ a { color: var(--text-dark); text-decoration: none; }
   z-index: 1100;
   overflow-x: auto;
   white-space: nowrap;
-    
 }
-
-.navbar.shopee-nav.hidden + .category-bar {
-  top: 0;
-}
+.navbar.shopee-nav.hidden + .category-bar { top: 0; }
 
 .category-menu {
   display: flex;
   gap: 12px;
-      justify-content: center;
+  justify-content: center;
 }
 
 .category-link {
   padding: 6px 14px;
   font-size: 0.92rem;
   border-radius: 20px;
-  background: var(--bg-soft);
-  color: var(--text-dark);
+  background: #fafafa;
+  color: #2d2d2d;
   transition: all 0.2s;
   font-weight: 500;
   font-family: "Segoe UI", Arial, sans-serif;
 }
-
 .category-link:hover {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: #ffffff;
+  color: #ff6f0f;
 }
-
 .category-link.active {
   background: #ff7e27;
   color: #ffffff;
-  border: 1px solid var(--primary);
+  border: 1px solid #ff6f0f;
   font-weight: 600;
 }
 
-/* ===========================================
-   PRODUCT CARD
-   =========================================== */
+/* PRODUCT CARD */
 .shopee-product-card {
   background: #fff;
-  border-radius: 6px;
+  border-radius: 12px !important;
   padding: 0;
-  border: 1px solid var(--border-soft);
+  border: 1px solid #f0f0f0;
   transition: 0.25s;
 }
-
 .shopee-product-card:hover {
   transform: translateY(-3px);
-  border-color: var(--primary);
+  border-color: #ff6f0f;
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-/* IMAGE */
 .product-image {
   width: 100%;
   padding-top: 100%;
   position: relative;
 }
-
 .product-image img {
   position: absolute;
   width: 100%;
   height: 100%;
   object-fit: contain;
+  border-radius: 12px 12px 0 0 !important;
 }
 
-/* INFO */
-.product-info {
-  padding: 10px;
-}
-
+.product-info { padding: 10px; }
 .product-title {
   font-size: 0.92rem;
   font-weight: 500;
@@ -226,244 +183,127 @@ a { color: var(--text-dark); text-decoration: none; }
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-
 .product-price {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--primary);
+  color: #ff6f0f;
   margin-top: 8px;
 }
 
-/* ===========================================
-   GRID
-   =========================================== */
-.row-cols-shopee {
-  --bs-gutter-x: 10px;
-  --bs-gutter-y: 12px;
-}
-
-.row-cols-shopee > * {
-  width: 20%;
-  flex: 0 0 auto;
-}
-/* ===========================================
-BUTTON & ACTION UI ROUNDING
-   =========================================== */
-
-/* Nút chung */
+/* BUTTON ROUNDING */
 button,
 .btn {
-  border-radius: 12px !important;
-  font-size: 1.2rem !important  ; 
+  border-radius: 12px ;
+  font-size: 1.2rem ;
 }
-
-/* Search button */
-.btn-search {
-  border-radius: 10px !important;
-  display: flex;
-  justify-content: center;
-  align-content: center;
+.btn-search-head { border-radius: 10px !important; }
+.btn-search-head {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff6f0f;
+    border: none;
+    color: #fff;
+    height: 40px;
+    width: 42px;
+    border-radius: 8px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-/* Navbar toggler button */
 .navbar-toggler {
   border-radius: 12px !important;
   padding: 6px 10px;
   border: 1px solid #ddd;
 }
 
-/* Nút trong dropdown */
 .dropdown-menu .dropdown-item {
   border-radius: 8px;
- 
   transition: 0.2s;
 }
-
 .dropdown-menu .dropdown-item:hover {
   background-color: #ff7a21 !important;
   color: #fff !important;
 }
 
-/* Links dạng nút trong Login – Register */
-.nav-icons .nav-link,
-.category-link {
-  border-radius: 14px !important;
-}
-
-/* Badge giỏ hàng bo tròn */
-.cart-icon .badge {
-  border-radius: 12px !important;
-  top: -5px;
-    right: -1px;
-}
-
-/* Card bo tròn */
-.shopee-product-card {
-  border-radius: 12px !important;
-}
-
-.product-image img {
-  border-radius: 12px 12px 0 0 !important;
-}
-
-/* Form control bo tròn */
-.form-control {
-  border-radius: 10px !important;
-}
-
-/* Dropdown menu bo tròn */
-.dropdown-menu {
-  border-radius: 12px;
-  overflow: hidden;
-}
-/* =============================================
-   LOGIN BUTTON — nhỏ hơn
-   ============================================= */
+/* LOGIN BUTTON */
 .nav-icons a[href="login"] {
-  background: var(--primary) !important;
+  background: #ff6f0f !important;
   color: #fff !important;
-  border: 1px solid var(--primary);
+  border: 1px solid #ff6f0f;
   border-radius: 999px !important;
-  padding: 6px 16px !important; /* ↓ nhỏ hơn */
-  font-size: 14px !important;    /* ↓ chữ nhỏ hơn */
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 4px;                      /* ↓ icon sát vào hơn */
-  transition: 0.25s;
-}
-
-.nav-icons a[href="login"]:hover {
-  background: var(--primary-dark) !important;
-  border-color: var(--primary-dark) !important;
-}
-
-
-/* =============================================
-   REGISTER BUTTON — nhỏ hơn
-   ============================================= */
-.nav-icons a[href="register"] {
-  background: #ffffff !important;
-  color: var(--primary) !important;
-  border: 1.5px solid var(--primary);
-  border-radius: 999px !important;
-  padding: 6px 16px !important; /* ↓ nhỏ hơn */
-  font-size: 14px !important;    /* ↓ chữ nhỏ */
+  padding: 6px 16px !important;
+  font-size: 14px !important;
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: 4px;
   transition: 0.25s;
 }
-
-.nav-icons a[href="register"]:hover {
-  background: var(--primary-light) !important;
-  border-color: var(--primary-dark) !important;
-  color: var(--primary-dark) !important;
+.nav-icons a[href="login"]:hover {
+  background: #d65a3a !important;
+  border-color: #d65a3a !important;
 }
 
-
-/* =============================================
-   CART ICON
-   ============================================= */
-.cart-icon i {
-  color: #ff7e27 !important;
-  font-size: 28px !important; /* ↓ nhỏ hơn */
-}
-
-
-/* =============================================
-   CART BADGE — nhỏ hơn
-   ============================================= */
-.cart-icon .badge {
-  background: var(--primary) !important;
-  color: #fff !important;
+/* REGISTER BUTTON */
+.nav-icons a[href="register"] {
+  background: #ffffff !important;
+  color: #ff6f0f !important;
+  border: 1.5px solid #ff6f0f;
   border-radius: 999px !important;
-  padding: 2px 5px !important;    /* ↓ nhỏ */
-  font-size: 10px !important;     /* ↓ chữ nhỏ */
-  font-weight: bold !important;
-  border: none !important;
-}
-
-/* ============================================
-   CATEGORY INLINE — inside NAVBAR (RIGHT SIDE)
-   ============================================ */
-.category-inline-menu {
+  padding: 6px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding-left: 15px;
-}
-
-.category-inline-link {
-  padding: 6px 14px !important;
-  font-size: 0.9rem;
-  border-radius: 20px !important;
-  background: var(--bg-soft) !important;
-  color: var(--text-dark) !important;
-  font-weight: 500;
+  gap: 4px;
   transition: 0.25s;
-  white-space: nowrap; /* Không xuống dòng */
-  border: 1px solid transparent !important;
+}
+.nav-icons a[href="register"]:hover {
+  background: #ffffff !important;
+  border-color: #d65a3a !important;
+  color: #d65a3a !important;
 }
 
-.category-inline-link:hover {
-  background: var(--primary-light) !important;
-  color: var(--primary) !important;
-  border-color: var(--primary) !important;
-}
-
-.category-inline-link.active {
-  background: var(--primary) !important;
-  color: #fff !important;
-  border-color: var(--primary-dark) !important;
-  font-weight: 600 !important;
-}
 /* CATEGORY DROPDOWN BUTTON */
 .category-toggle-btn {
-    background: var(--primary) !important;
-    color: #fff !important;
-    border-radius: 20px !important;
-    padding: 6px 14px !important;
-    font-weight: 600;
-    border: none !important;
-    margin-left: -120px !important;
+  background: #ff6f0f !important;
+  color: #fff !important;
+  border-radius: 20px !important;
+  padding: 6px 14px !important;
+  font-weight: 600;
+  border: none !important;
+  margin-left: -120px !important;
 }
-
 .category-toggle-btn:hover {
-    background: var(--primary-dark) !important;
-    color: #fff !important;
+  background: #d65a3a !important;
 }
 
-/* DROPDOWN MENU STYLE */
 .category-dropdown-menu {
-    border-radius: 12px !important;
-    padding: 0 !important;
-    overflow: hidden;
-    border: 1px solid var(--primary) !important;
-    margin-left: -200px !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 1px solid #ff6f0f !important;
+  margin-left: -200px !important;
 }
-
-/* ITEM STYLE */
 .category-dropdown-menu .dropdown-item {
-    padding: 10px 16px !important;
-    color: var(--text-dark) !important;
-    background: #fff !important;
-    border-bottom: 1px solid #f2f2f2 !important;
+  padding: 10px 16px !important;
+  color: #2d2d2d !important;
+  background: #fff !important;
+  border-bottom: 1px solid #f2f2f2 !important;
 }
-
 .category-dropdown-menu .dropdown-item:hover {
-    background: var(--primary-light) !important;
-    color: var(--primary) !important;
+  background: #ffffff !important;
+  color: #ff6f0f !important;
 }
-
 .category-dropdown-menu .dropdown-item.active {
-    background: var(--primary) !important;
-    color: #fff !important;
+  background: #ff6f0f !important;
+  color: #fff !important;
 }
-
-
 </style>
+
+
 
 <!-- ========== NAVBAR ========== -->
 <nav class="navbar navbar-expand-lg shopee-nav fixed-top">
@@ -483,7 +323,7 @@ button,
       <!-- Search -->
       <form class="shopee-search-form d-flex mx-lg-auto my-2 my-lg-0" action="home" method="get">
         <input class="form-control" type="search" name="search" placeholder="Tìm kiếm sản phẩm..." value="${searchQuery}">
-        <button class="btn btn-search" type="submit"><i class="fas fa-search"></i></button>
+        <button class="btn btn-search-head" type="submit"><i class="fas fa-search"></i></button>
       </form>
 <!-- CATEGORY DROPDOWN BUTTON -->
 <div class="dropdown ms-3">

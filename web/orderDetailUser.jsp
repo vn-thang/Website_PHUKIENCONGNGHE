@@ -6,6 +6,52 @@
 <html>
 <head>
     <title>Chi Tiết Đơn Hàng #${order.maDonHang}</title>
+    <style>
+        /* ============================
+      🎨 MÀU TRẠNG THÁI
+============================ */
+
+/* Đang xử lý */
+.badge-processing {
+    background-color: #ffe0b2;
+    color: #a65300;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Đã thanh toán */
+.badge-paid {
+    background-color: #ff9800;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Đang giao */
+.badge-shipping {
+    background-color: #2196f3;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Đã giao */
+.badge-finished {
+    background-color: #4caf50;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+/* Hủy / lỗi */
+.badge-failed {
+    background-color: #f44336;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+    </style>
 </head>
 <body>
     <jsp:include page="header.jsp" />

@@ -105,6 +105,10 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #ff7e27; }
+        .btn {
+  border-radius: 12px ;
+  font-size: smaller !important;
+}
     </style>
 </head>
 <body>
@@ -315,7 +319,8 @@
             </div>
         </div>
     </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 1. Hàm load dữ liệu vào Modal Sửa
         function loadEditData(btn) {

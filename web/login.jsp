@@ -138,11 +138,14 @@
             0% {transform: translateY(0) rotate(0deg);}
             100% {transform: translateY(-1000px) rotate(720deg);}
         }
+        a{
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
     <!-- NÚT TRANG CHỦ & ĐĂNG KÝ -->
-    <a href="home" class="btn-home"><i class="fa-solid fa-house me-1"></i>Trang chủ</a>
+    <a href="about.jsp" class="btn-home"><i class="fa-solid fa-house me-1"></i>Trang chủ</a>
     <a href="register" class="btn-register"><i class="fa-solid fa-user-plus me-1"></i>Đăng ký</a>
 
     <!-- NỀN CHUYỂN ĐỘNG -->
@@ -172,7 +175,7 @@
         
             <a href="forgotPassword" class="float-end text-decoration-none">Quên mật khẩu?</a>
        
-        <div class="text-center mt-3 text-muted">
+        <div class="text-center mt-5 text-muted">
             Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a>
         </div>
     </div>

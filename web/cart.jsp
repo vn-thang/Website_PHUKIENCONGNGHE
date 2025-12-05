@@ -15,107 +15,142 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+    --brand-orange: #ff7e27;
+    --brand-orange-hover: #e76d20;
+    --brand-red: #ff4a4a;
+    --brand-red-hover: #c43131;
+}
 
-        <style>
-            /* === Tone chính: #ff6600 và fix modal z-index === */
-            :root{
-                --brand-orange: #ff7e27;
-                --brand-orange-hover: #ff7a33;
-            }
+/* GLOBAL */
+body {
+    background-color: #f5f5f5;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+h2, h4, h5 {
+    color: #333;
+    font-weight: 600;
+}
+a {
+    color: var(--brand-orange);
+    text-decoration: none;
+}
+a:hover {
+    color: var(--brand-orange-hover);
+}
 
-            body {
-                background-color: #f5f5f5;
-                font-family: "Helvetica Neue", Arial, sans-serif;
-            }
-            h2,h4,h5 {
-                color: #333;
-                font-weight: 600;
-            }
+/* CARD WRAPPER */
+.cart-container,
+.cart-summary {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
-            /* link */
-            a {
-                color: var(--brand-orange);
-                text-decoration: none;
-            }
-            a:hover {
-                color: var(--brand-orange-hover);
-            }
+/* TABLE */
+.cart-table th {
+    background-color: #ffe7d3;
+    color: var(--brand-orange);
+    text-transform: uppercase;
+}
+.cart-table td {
+    vertical-align: middle;
+}
 
-            /* Cart card / summary */
-            .cart-container, .cart-summary {
-                background-color: #fff;
-                border-radius: 8px;
-                padding: 1.5rem;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
+/* FORM CONTROL FIX WIDTH SAFE */
+.form-control {
+    width: 100%;
+    max-width: 300px;
+}
 
-            /* bảng */
-            .cart-table th {
-                background-color: #fff0ea;
-                color: var(--brand-orange);
-                text-transform: uppercase;
-            }
-            .cart-table td {
-                vertical-align: middle;
-            }
+/* -----------------------------------
+   BUTTON SYSTEM (KHÔNG GỘP CHUNG)
+------------------------------------*/
 
-            /* nút thanh toán */
-            .btn-shopee-checkout {
-                background-color: var(--brand-orange) !important;
-                color: #fff !important;
-                border: none !important;
-                border-radius: 6px !important;
-                font-weight: 600 !important;
-                padding: 0.8rem 1rem !important;
-                font-size: 1.05rem !important;
-            }
-            .btn-shopee-checkout:hover {
-                background-color: var(--brand-orange-hover);
-                color: black !important;
-            }
+/* NÚT CHÍNH – class dùng để thay thế override Bootstrap */
+.btn-brand {
+    background-color: var(--brand-orange);
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    transition: 0.25s ease;
+}
+.btn-brand:hover {
+    background-color: var(--brand-orange-hover);
+    color: #fff;
+}
 
-            /* modal header màu brand */
-            .modal-header {
-                background-color: var(--brand-orange);
-                color: #fff;
-            }
+/* NÚT OUTLINE DANGER */
+.btn-brand-outline {
+    background: transparent;
+    
+    color: var(--brand-red);
+    border-radius: 6px;
+    transition: 0.25s ease;
+}
+.btn-brand-outline:hover {
+    background-color: #ffebeb;
+    color: var(--brand-red-hover);
+}
 
-            /* FIX: modal và backdrop luôn trên header (header của bạn có z-index ~1101) */
-            .modal-backdrop {
-                z-index: 1190 !important;
-            }
-            .modal {
-                z-index: 1200 !important;
-            }
+/* NÚT TÙY BIẾN RIÊNG */
+.btn-buy-now {
+    background-color: var(--brand-orange);
+    color: #fff;
+    border-radius: 6px;
+    border: none;
+    transition: 0.25s ease;
+}
+.btn-buy-now:hover {
+    background-color: var(--brand-orange-hover);
+}
 
-            /* accent trong modal / cart */
-            .list-group-item strong {
-                color: var(--brand-orange);
-            }
-            .product-price, .fw-bold.text-danger {
-                color: var(--brand-orange) !important;
-            }
+.btn-shopee-checkout {
+    background-color: var(--brand-orange);
+    color: #fff;
+    border-radius: 6px;
+    border: none;
+    transition: 0.25s ease;
+}
+.btn-shopee-checkout:hover {
+    background-color: var(--brand-orange-hover);
+}
 
-            /* checkbox checked */
-            .form-check-input:checked {
-                background-color: var(--brand-orange) !important;
-                border-color: var(--brand-orange) !important;
-            }
+/* MODAL */
+.modal-header {
+    background-color: var(--brand-orange);
+    color: #fff;
+}
 
-            /* nút xóa outline hover (nhẹ) */
-            .btn-outline-danger:hover {
-                background-color: rgba(255,102,0,0.06) !important;
-                color: #c43f00 !important;
-            }
+/* TRÁNH XUNG ĐỘT HEADER/FOOTER */
+.modal-backdrop { 
+    z-index: 1190; 
+}
+.modal { 
+    z-index: 1200; 
+}
 
-            /* giữ sạch, không thay layout khác */
-            .cart-table th small, .cart-table th .small {
-                color: var(--brand-orange);
-            }
-            .form-control{
-                width: 200% !important;
-            }
-        </style>
+/* TEXT ACCENT */
+.text-accent,
+.list-group-item strong,
+.product-price {
+    color: var(--brand-orange);
+}
+
+/* CHECKBOX BRAND */
+.form-check-input:checked {
+    background-color: var(--brand-orange);
+    border-color: var(--brand-orange);
+}
+
+/* BUTTON FONT SIZE UNIFORM */
+button {
+    font-size: 1rem;
+}
+</style>
+
     </head>
     <body>
         <jsp:include page="header.jsp" />
@@ -189,9 +224,11 @@
                                                     <fmt:formatNumber value="${item.totalPrice}" type="currency" currencyCode="VND" minFractionDigits="0"/>
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="cart?action=remove&productId=${product.maSanPham}" class="btn btn-outline-danger btn-sm">
-                                                        <i class="fas fa-trash"></i>
-                                                    </a>
+                                                   <a href="cart?action=remove&productId=${product.maSanPham}" 
+   class="btn-brand-outline btn-sm">
+    <i class="fas fa-trash"></i>
+</a>
+
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -217,9 +254,12 @@
                                     </li>
                                 </ul>
                                 <div class="d-grid gap-2 mt-3">
-                                   <button type="button" class="btn btn-buy-now text-black rounded-0" id="btn-go-checkout" disabled>
-    Tiến Hành Thanh Toán <span id="buy-count">(0)</span>
+                                   <button type="button" 
+        class="btn-buy-now text-white" 
+        id="btn-go-checkout" disabled>
+    Tiến Hành Thanh Toán
 </button>
+
                                     <div id="paypal-button-container" class="mt-3" style="display:none;"></div>
                                 </div>
                             </div>

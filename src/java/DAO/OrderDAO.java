@@ -452,27 +452,74 @@ public class OrderDAO {
      * HÀM MỚI: Khách hàng tự hủy đơn hàng.
      * Điều kiện: Chỉ hủy được khi trạng thái là 'Dang xu ly'.
      */
+   /**
+     * HÀM HỦY ĐƠN HÀNG & HOÀN TỒN KHO (Transaction)
+     */
     public boolean cancelOrder(int orderId, int userId) {
-        // Cập nhật trạng thái thành 'Da huy'
-        // Chỉ áp dụng cho đơn hàng của đúng User đó VÀ đang ở trạng thái 'Dang xu ly'
-        String query = "UPDATE donhang SET TrangThai = 'Da huy' " +
-                       "WHERE MaDonHang = ? AND MaNguoiDung = ? AND TrangThai = 'Dang xu ly'";
+        // SQL 1: Đổi trạng thái đơn hàng
+        String updateStatusSQL = "UPDATE donhang SET TrangThai = N'Da huy' " +
+                                 "WHERE MaDonHang = ? AND MaNguoiDung = ? AND TrangThai = N'Dang xu ly'";
+        
+        // SQL 2: Lấy danh sách sản phẩm trong đơn để hoàn kho
+        String getItemsSQL = "SELECT MaSanPham, SoLuong FROM chitietdonhang WHERE MaDonHang = ?";
+        
+        // SQL 3: Cộng lại tồn kho
+        String restoreStockSQL = "UPDATE sanpham SET SoLuongTon = SoLuongTon + ? WHERE MaSanPham = ?";
+
         try {
             conn = DBContext.getConnection();
-            ps = conn.prepareStatement(query);
+            conn.setAutoCommit(false); // Bắt đầu Transaction
+
+            // --- BƯỚC 1: Cập nhật trạng thái ---
+            ps = conn.prepareStatement(updateStatusSQL);
             ps.setInt(1, orderId);
             ps.setInt(2, userId);
             
-            int row = ps.executeUpdate();
-            return row > 0; // Trả về true nếu hủy thành công
+            int rowsAffected = ps.executeUpdate();
+            
+            // Nếu không update được dòng nào (do đơn không tồn tại, hoặc không phải 'Đang xử lý')
+            if (rowsAffected == 0) {
+                conn.rollback();
+                return false; // Hủy thất bại
+            }
+
+            // --- BƯỚC 2: Lấy chi tiết đơn hàng ---
+            PreparedStatement psGetItems = conn.prepareStatement(getItemsSQL);
+            psGetItems.setInt(1, orderId);
+            rs = psGetItems.executeQuery();
+
+            // --- BƯỚC 3: Hoàn lại kho từng món ---
+            PreparedStatement psRestore = conn.prepareStatement(restoreStockSQL);
+            while (rs.next()) {
+                int productId = rs.getInt("MaSanPham");
+                int quantity = rs.getInt("SoLuong");
+
+                psRestore.setInt(1, quantity); // Cộng thêm số lượng
+                psRestore.setInt(2, productId);
+                psRestore.addBatch(); // Gom lại chạy 1 lần
+            }
+            psRestore.executeBatch();
+            
+            // Đóng các PreparedStatement phụ
+            psGetItems.close();
+            psRestore.close();
+
+            // --- HOÀN TẤT ---
+            conn.commit(); // Xác nhận mọi thay đổi
+            return true;
+
         } catch (Exception e) {
+            try {
+                if (conn != null) conn.rollback(); // Gặp lỗi thì hoàn tác
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
+            return false;
         } finally {
             closeResources();
         }
-        return false;
     }
-    // ... (Các hàm cũ giữ nguyên)
 
     // 1. Đếm tổng số đơn hàng đã bán thành công
     public int countTotalOrders() {

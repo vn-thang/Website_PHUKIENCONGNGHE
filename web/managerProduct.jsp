@@ -9,108 +9,134 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <style>
-        /* ========== GLOBAL STYLE ========== */
-        body {
-            background-color: #ffffff;
-            font-family: "Segoe UI", sans-serif;
-            color: #333;
-        }
+  <style>
+/* ============================
+   GLOBAL
+============================ */
+body {
+    background-color: #ffffff;
+    font-family: "Segoe UI", sans-serif;
+    color: #333;
+}
 
-        h2 {
-            color: #ff7e27 !important;
-            font-weight: 700;
-        }
+h2 {
+    color: #ff7e27;
+    font-weight: 700;
+}
 
-        /* ========== FORCE OVERRIDE BOOTSTRAP BUTTONS ========== */
-        .btn,
-        button {
-            background-color: #ff7e27 !important;
-            color: #fff !important;
-            border: none !important;
-            border-radius: 10px !important;
-        }
+/* ============================
+   TABLE
+============================ */
+.table {
+    border-radius: 12px;
+    border: 1px solid #ffe0cc;
+    overflow: hidden;
+}
 
-        .btn:hover,
-        button:hover {
-            background-color: #e25500 !important;
-            color: #fff !important;
-        }
+thead.table-dark th {
+    background-color: #ff7e27;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+}
 
-        /* Button riêng biệt */
-        .btn-info {
-            background-color: #ffa733 !important;
-        }
+tbody tr:hover {
+    background: #fff3e6;
+}
 
-        .btn-info:hover {
-            background-color: #ff7b00 !important;
-        }
+/* ============================
+   FILTER BOX
+============================ */
+.filter-box {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    border-left: 4px solid #ff7e27;
+}
 
-        .btn-warning {
-            background-color: #ffc107 !important;
-            color: #000 !important;
-        }
+/* ============================
+   BUTTON SYSTEM (không đè Bootstrap)
+============================ */
+.btn-main {
+    background-color: #ff7e27;
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 14px;
+    border: none;
+}
+.btn-main:hover {
+    background-color: #e25500;
+    color: #fff;
+}
 
-        .btn-warning:hover {
-            background-color: #e0a800 !important;
-            color: #000 !important;
-        }
+/* Search button */
+.btn-search {
+    background-color: #ffa733;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+}
+.btn-search {
+    position: absolute;
+    right: 8% !important;
+    top: 37.5% !important;
+    transform: translateY(-50%);
+    background: #ff6f0f;
+    border: none;
+    color: #fff;
+    height: 40px;
+    width: 42px;
+    border-radius: 8px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-search:hover {
+    background-color: #ff7b00;
+}
 
-        .btn-danger {
-            background-color: #dc3545 !important;
-        }
+/* Warning button (Sửa) */
+.btn-edit {
+    background-color: #ffc107;
+    color: #000;
+    border-radius: 10px;
+    border: none;
+}
+.btn-edit:hover {
+    background-color: #e0a800;
+}
 
-        .btn-danger:hover {
-            background-color: #c82333 !important;
-        }
+/* Danger button (Xóa) */
+.btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+}
+.btn-delete:hover {
+    background-color: #c82333;
+}
 
-        /* ========== TABLE STYLE ========== */
-        .table {
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #ffe0cc;
-        }
+/* Statistic button */
+.statistic-btn {
+    background-color: #ffa733;
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+.statistic-btn:hover {
+    background-color: #ff7e27;
+}
+@media (min-width: 768px) {
+    .col-md-7 {
+        flex: 0 0 auto;
+        width: 50% !important;
+    }
+}
+</style>
 
-        thead.table-dark th {
-            background-color: #ff7e27 !important;
-            color: #fff !important;
-            font-size: 15px;
-            text-align: center;
-        }
-
-        tbody tr:hover {
-            background-color: #fff3e6 !important;
-        }
-
-        /* ========== FILTER BOX ========== */
-        .filter-box {
-            background: #fff;
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid #ff7e27;
-        }
-
-        /* ========== STATISTIC BUTTON ========== */
-        .statistic-btn {
-            background-color: #ffa733 !important;
-            border: none !important;
-            color: #fff !important;
-            border-radius: 10px;
-            padding: 8px 14px;
-        }
-
-        .statistic-btn:hover {
-            background-color: #ff7e27 !important;
-        }
-
-        /* Back button */
-        .btn-outline-danger {
-            background-color: #ff7e27 !important;
-            color: #fff !important;
-            border-radius: 10px !important;
-        }
-    </style>
 </head>
 
 <body>
@@ -126,9 +152,10 @@
         <h2><i class="fas fa-box"></i> Quản Lý Sản Phẩm</h2>
 
         <form action="statistic" method="get">
-            <button type="submit" class="statistic-btn">
-                <i class="fas fa-chart-bar"></i> Xem thống kê
-            </button>
+           <button type="submit" class="statistic-btn">
+    <i class="fas fa-chart-bar"></i> Xem thống kê
+</button>
+
         </form>
     </div>
 
@@ -142,9 +169,10 @@
                     <input type="text" name="search" value="${searchValue}"
                            class="form-control me-2"
                            placeholder="Tìm kiếm theo tên sản phẩm...">
-                    <button class="btn btn-info">
-                        <i class="fa fa-search"></i>
-                    </button>
+                  <button class="btn-search">
+    <i class="fa fa-search"></i>
+</button>
+
                 </form>
             </div>
 
@@ -169,9 +197,10 @@
 
     <!-- ADD BUTTON -->
     <div class="mb-3">
-        <a href="manager-product?action=show-add-form" class="btn btn-main">
-            <i class="fas fa-plus"></i> Thêm Sản Phẩm
-        </a>
+        <a href="manager-product?action=show-add-form" class="btn-main">
+    <i class="fas fa-plus"></i> Thêm Sản Phẩm
+</a>
+
     </div>
 
     <!-- PRODUCT TABLE -->
@@ -199,16 +228,18 @@
                 <td>${p.soLuongTon}</td>
 
                 <td class="text-center">
-                    <a href="manager-product?action=load&pid=${p.maSanPham}"
-                       class="btn btn-warning btn-sm me-2">
-                        <i class="fa-solid fa-pen"></i> Sửa
-                    </a>
+                   <a href="manager-product?action=load&pid=${p.maSanPham}"
+   class="btn-edit btn-sm me-2">
+    <i class="fa-solid fa-pen"></i> Sửa
+</a>
+
 
                     <a href="manager-product?action=delete&pid=${p.maSanPham}"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn chắc chắn muốn xóa?')">
-                        <i class="fa-solid fa-trash"></i> Xóa
-                    </a>
+   class="btn-delete btn-sm"
+   onclick="return confirm('Bạn chắc chắn muốn xóa?')">
+    <i class="fa-solid fa-trash"></i> Xóa
+</a>
+
                 </td>
             </tr>
         </c:forEach>

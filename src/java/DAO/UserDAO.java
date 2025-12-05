@@ -55,7 +55,7 @@ public class UserDAO {
     }
 
     /**
-     * HÀM MỚI: Xóa một người dùng (cần xử lý ràng buộc CSDL cẩn thận).
+      Xóa một người dùng (cần xử lý ràng buộc CSDL cẩn thận).
      */
     public void deleteUser(int userId) {
         // ... (Hàm này giữ nguyên như bước 88) ...
@@ -74,7 +74,7 @@ public class UserDAO {
     }
 
     /**
-     * HÀM MỚI: Cập nhật vai trò (user/admin).
+     Cập nhật vai trò (user/admin).
      */
     public void updateUserRole(int userId, String role) {
         // ... (Hàm này giữ nguyên như bước 88) ...
@@ -209,7 +209,7 @@ public class UserDAO {
     }
 
     /**
-     * HÀM MỚI: Cập nhật mật khẩu cho người dùng.
+      Cập nhật mật khẩu cho người dùng.
      */
     public boolean updatePassword(int userId, String newPassword) {
         String query = "UPDATE nguoidung SET MatKhau = ? WHERE MaNguoiDung = ?";
@@ -229,10 +229,8 @@ public class UserDAO {
     }
 
     /**
-     * HÀM MỚI: Cập nhật thông tin cá nhân (không bao gồm mật khẩu).
+      Cập nhật thông tin cá nhân (không bao gồm mật khẩu).
      *
-     * @param user Đối tượng user chứa thông tin mới
-     * @return true nếu cập nhật thành công
      */
     public boolean updateProfile(User user) {
         // SỬA LỖI: Tên bảng là "nguoidung" (viết thường)
@@ -258,10 +256,7 @@ public class UserDAO {
 
     /**
      * HÀM MỚI: Kiểm tra xem email đã tồn tại cho người dùng KHÁC chưa.
-     *
-     * @param email Email cần kiểm tra
-     * @param currentUserId ID của người dùng hiện tại
-     * @return true nếu email đã được người khác sử dụng
+  
      */
     public boolean checkEmailExistForOtherUser(String email, int currentUserId) {
         // SỬA LỖI: Tên bảng là "nguoidung" (viết thường)
@@ -285,14 +280,7 @@ public class UserDAO {
 
     
     
-    // ================================================================
-    // CÁC HÀM MỚI CHO CHỨC NĂNG QUÊN MẬT KHẨU (FORGOT PASSWORD)
-    // ================================================================
-
-    /**
-     * 1. Kiểm tra tài khoản có tồn tại qua Email hay không.
-     * Tên hàm: checkAccountByEmail (Thay vì checkEmailExist)
-     */
+  
     public boolean checkAccountByEmail(String email) {
         String query = "SELECT MaNguoiDung FROM nguoidung WHERE Email = ?";
         try {
@@ -311,10 +299,7 @@ public class UserDAO {
         return false;
     }
 
-    /**
-     * 2. Lưu mã OTP (Token) và cài đặt thời gian hết hạn (ví dụ: 10 phút).
-     * Tên hàm: updateRecoveryToken (Thay vì updateResetToken)
-     */
+   
     public void updateRecoveryToken(String email, String token) {
         // Cập nhật mã xác thực và set thời gian hết hạn là NOW() + 10 phút
         String query = "UPDATE nguoidung SET MaXacThuc = ?, ThoiGianHetHan = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE Email = ?";
@@ -331,10 +316,7 @@ public class UserDAO {
         }
     }
 
-    /**
-     * 3. Xác minh mã OTP có đúng và còn hạn sử dụng không.
-     * Tên hàm: validateOtp (Thay vì checkToken)
-     */
+   
     public boolean validateOtp(String email, String otp) {
         // Kiểm tra 3 điều kiện: Email đúng, Mã đúng, Thời gian chưa hết hạn (> NOW)
         String query = "SELECT MaNguoiDung FROM nguoidung WHERE Email = ? AND MaXacThuc = ? AND ThoiGianHetHan > NOW()";
@@ -355,16 +337,13 @@ public class UserDAO {
         return false;
     }
 
-    /**
-     * 4. Đặt lại mật khẩu mới và xóa mã OTP cũ.
-     * Tên hàm: changePasswordAfterReset (Thay vì updatePassword)
-     */
+ 
     public void changePasswordAfterReset(String email, String newPassword) {
         String query = "UPDATE nguoidung SET MatKhau = ?, MaXacThuc = NULL, ThoiGianHetHan = NULL WHERE Email = ?";
         try {
             conn = DBContext.getConnection();
             ps = conn.prepareStatement(query);
-            ps.setString(1, newPassword); // Lưu ý: newPassword nên được mã hóa (SHA-256) trước khi truyền vào đây
+            ps.setString(1, newPassword); 
             ps.setString(2, email);
             ps.executeUpdate();
         } catch (Exception e) {

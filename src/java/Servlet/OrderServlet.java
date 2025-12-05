@@ -29,8 +29,7 @@ public class OrderServlet extends HttpServlet {
 
         String[] selectedProductIds = request.getParameterValues("selectedProducts");
         if (selectedProductIds == null || selectedProductIds.length == 0) {
-            request.setAttribute("errorMessage", "Chưa chọn sản phẩm nào!");
-            request.getRequestDispatcher("checkout.jsp").forward(request, response);
+            response.sendRedirect("cart.jsp");
             return;
         }
 
@@ -52,32 +51,43 @@ public class OrderServlet extends HttpServlet {
         String trangThai = "paypal".equals(paymentMethod) ? "Da Thanh Toan" : "Dang xu ly";
 
         // =================================================================
-        // XỬ LÝ VOUCHER (RIÊNG) & FREESHIP (RIÊNG)
+        // LOGIC TÍNH TOÁN 2 LOẠI VOUCHER
         // =================================================================
-        double totalMoney = selectedCart.getTotalCartPrice(); // Tiền hàng
+        double subTotal = selectedCart.getTotalCartPrice(); 
         
-        // 1. Xử lý Phí Ship (Mặc định 30k)
-        double shippingFee = 30000;
-        String useFreeship = request.getParameter("useFreeship"); // "true" hoặc null
-        if ("true".equals(useFreeship)) {
-            shippingFee = 0; // Nếu tích chọn Freeship -> Ship = 0
-        }
+        // 1. Phí Ship Gốc (30k hoặc 89k)
+        double baseShip = 30000;
+        try { baseShip = Double.parseDouble(request.getParameter("shippingMethod")); } catch (Exception e) {}
 
-        // 2. Xử lý Voucher Giảm giá (Check lại điều kiện an toàn)
-        double discount = 0;
+        // 2. Giảm giá Ship (Freeship)
+        double shipDiscount = 0;
+        try { 
+            // Nhận giá trị max được giảm (ví dụ 300k)
+            double clientShipDisc = Double.parseDouble(request.getParameter("shipDiscount"));
+            // Kiểm tra điều kiện > 3 triệu
+            if (clientShipDisc > 0 && subTotal >= 3000000) {
+                shipDiscount = clientShipDisc; 
+            }
+        } catch (Exception e) {}
+        
+        // Tính phí ship thực tế (Không âm)
+        double finalShip = baseShip - shipDiscount;
+        if (finalShip < 0) finalShip = 0; // Nếu giảm nhiều hơn phí ship thì về 0
+
+        // 3. Giảm giá Shop (Tiền hàng)
+        double shopDiscount = 0;
         try {
-            double clientDiscount = Double.parseDouble(request.getParameter("selectedDiscount"));
-            if (clientDiscount == 1000000 && totalMoney >= 10000000) discount = 1000000;
-            else if (clientDiscount == 500000 && totalMoney >= 3000000) discount = 500000;
-            else if (clientDiscount == 200000 && totalMoney >= 1000000) discount = 200000;
+            double clientShopDisc = Double.parseDouble(request.getParameter("shopDiscount"));
+            if (clientShopDisc == 1000000 && subTotal >= 10000000) shopDiscount = 1000000;
+            else if (clientShopDisc == 500000 && subTotal >= 3000000) shopDiscount = 500000;
+            else if (clientShopDisc == 200000 && subTotal >= 1000000) shopDiscount = 200000;
         } catch (Exception e) {}
 
-        // 3. Tổng cuối cùng
-        double finalTotal = totalMoney + shippingFee - discount;
+        // 4. TỔNG CUỐI CÙNG
+        double finalTotal = subTotal + finalShip - shopDiscount;
         if (finalTotal < 0) finalTotal = 0;
         // =================================================================
 
-        // Lưu vào DB
         OrderDAO orderDAO = new OrderDAO();
         String errorMessage = orderDAO.createOrder(user, selectedCart, hoTen, sdt, diaChi, trangThai, finalTotal);
 
@@ -88,12 +98,12 @@ public class OrderServlet extends HttpServlet {
             session.setAttribute("cart", originalCart);
             session.setAttribute("size", originalCart.getItems().size());
             
-            // Thông báo
-            StringBuilder msg = new StringBuilder("Đặt hàng thành công!");
-            if(shippingFee == 0) msg.append(" (Freeship)");
-            if(discount > 0) msg.append(" (Giảm ").append(String.format("%,.0f", discount)).append("đ)");
+            // Thông báo chi tiết
+            String msg = "Đặt hàng thành công!";
+            if(finalShip == 0 && baseShip > 0) msg += " (Freeship)";
+            if(shopDiscount > 0) msg += " (Giảm hàng " + String.format("%,.0f", shopDiscount/1000) + "k)";
             
-            session.setAttribute("msgSuccess", msg.toString());
+            session.setAttribute("msgSuccess", msg);
             response.sendRedirect("order-history");
         } else {
             request.setAttribute("errorMessage", errorMessage);

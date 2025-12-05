@@ -366,7 +366,7 @@
 /* --- CSS CHO NÚT CHATBOT (Phía dưới) --- */
 .chatbot-toggler {
     position: fixed;
-    bottom: 50px;
+    bottom: 180px;
     right: 35px; /* Căn thẳng hàng với nút gọi ở trên */
     outline: none;
     border: none;
@@ -579,6 +579,37 @@
     border-color: #007bff;
 }
 
+.back-to-top {
+  position: fixed;
+  top: 88%;
+  right: 36px;
+  width: 45px;
+  height: 45px;
+  background: #ff6f0f;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  z-index: 2000;
+}
+
+
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+
 
         </style>
     </head>
@@ -786,8 +817,11 @@
 <div class="chatbot-toggler" onclick="toggleChatWindow()">
     <i class="fas fa-robot" id="chatIcon"></i>
     <i class="fas fa-times" id="closeIcon" style="display: none;"></i>
+          
 </div>
-
+  <button id="backToTop" class="back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
 <div class="chat-window-container" id="chatWindow">
     
     <div class="chat-header">
@@ -833,12 +867,34 @@
     <div class="chat-footer">
         <input type="text" id="userInput" placeholder="Nhập tin nhắn..." onkeypress="handleEnter(event)">
         <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    
 </div>
+
+
 </div>    
 
         <jsp:include page="footer.jsp" />
 
         <script>
+            
+            // scroll to head
+            const backToTop = document.getElementById("backToTop");
+
+window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+});
+
+backToTop.addEventListener("click", () => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+
             const slides = document.querySelectorAll(".hero-slide");
             const prevBtn = document.querySelector(".hero-btn.prev");
             const nextBtn = document.querySelector(".hero-btn.next");

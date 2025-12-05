@@ -94,6 +94,14 @@
         /* Badge Custom */
         .badge-success { background-color: #ff7e27 !important; color: #fff; } 
         .badge-secondary { background-color: #999 !important; color: #fff; }
+        button,
+.btn {
+  border-radius: 12px ;
+  font-size: smaller !important;
+}
+.modal{
+    z-index: 500;
+}
     </style>
 </head>
 
@@ -218,10 +226,10 @@
 
                         <td class="text-center">
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-primary btn-sm mr-2" 
+                                <button  class="btn btn-primary btn-sm mr-2" 
                                         onclick="openReplyModal('${r.maDanhGia}', '${r.phanHoi}', ${r.trangThai})" 
                                         title="Trả lời / Sửa">
-                                    <i class="fas fa-edit"></i> Sửa
+                                <i  class="fas fa-edit"></i> Sửa
                                 </button>
                                 
                                 <a href="admin-reviews?action=delete&id=${r.maDanhGia}" 
@@ -284,7 +292,7 @@
             </div>
         </div>
     </div>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script>
         // 1. Hàm mở Modal (Dùng jQuery chuẩn BS4)
         function openReplyModal(id, currentReply, status) {

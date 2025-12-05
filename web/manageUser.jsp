@@ -21,6 +21,11 @@
         }
 
         /* BUTTON */
+        button, .btn
+ {
+    border-radius: 12px !important;
+    font-size: smaller !important;
+}
         .btn-primary {
             background-color: #ff7e27 !important;
             border: none !important;

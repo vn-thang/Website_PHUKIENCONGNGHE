@@ -83,6 +83,38 @@
         .btn-primary:hover {
             background-color: #e25500 !important;
         }
+        button, .btn {
+    border-radius: 12px;
+    font-size: smaller !important;
+}
+
+/* ================= ROW COLOR BY STATUS ============= */
+
+/* Đang xử lý */
+.row-warning {
+    background-color: #FFF4DB !important;
+}
+
+/* Đã thanh toán */
+.row-info {
+    background-color: #FFE3CC !important;
+}
+
+/* Đang giao */
+.row-primary {
+    background-color: #FFE0CC !important;
+}
+
+/* Đã giao */
+.row-success {
+    background-color: #E8F8F0 !important;
+}
+
+/* Hủy / lỗi */
+.row-danger {
+    background-color: #FFE1E3 !important;
+}
+
     </style>
 </head>
 
@@ -112,7 +144,16 @@
 
                     <tbody>
                         <c:forEach items="${orderList}" var="o">
-                            <tr>
+                           <tr class="
+    <c:choose>
+        <c:when test='${o.trangThai == "Dang xu ly"}'>row-warning</c:when>
+        <c:when test='${o.trangThai == "Da Thanh Toan"}'>row-info</c:when>
+        <c:when test='${o.trangThai == "Dang giao"}'>row-primary</c:when>
+        <c:when test='${o.trangThai == "Da giao"}'>row-success</c:when>
+        <c:otherwise>row-danger</c:otherwise>
+    </c:choose>
+">
+
                                 <th scope="row">#${o.maDonHang}</th>
 
                                 <td>

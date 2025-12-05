@@ -11,50 +11,99 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        /* ===================================
-           🎨 TONE MÀU CAM #ff6600
-        ===================================== */
-        h2 {
-            color: #ff7e27 !important;
-            font-weight: 700;
-        }
+       /* ========================
+   🎨 TONE CAM UI 
+   Tối ưu – Không xung đột
+========================= */
 
-        .table thead {
-            background-color: #ff7e27 !important;
-            color: white !important;
-        }
+/* Tiêu đề chính */
+.page-title {
+    color: #ff7e27;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
 
-        .btn-primary {
-            background-color: #ff7e27;
-            border-color: #ff7e27;
-        }
-        .btn-primary:hover {
-            background-color: #e65a00;
-            border-color: #e65a00;
-        }
+/* ========================
+   BUTTON
+========================= */
+.btn-order-view {
+    background-color: #ff7e27;
+    border-color: #ff7e27;
+    padding: 5px 12px;
+    font-size: 13px;
+    border-radius: 8px;
+}
 
-        /* Tăng độ mềm UI */
-        table, th, td {
-            vertical-align: middle;
-        }
+.btn-order-view:hover {
+    background-color: #e65a00;
+    border-color: #e65a00;
+}
 
-        /* Badge màu trạng thái tùy chỉnh */
-        .badge-warning-custom {
-            background-color: #ffcc80;
-            color: #663300;
-        }
+/* ========================
+   TABLE
+========================= */
+.order-table {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
-        .badge-info-custom {
-            background-color: #ff9966;
-            color: #fff;
-        }
+.order-table thead {
+    background-color: #ff7e27 !important;
+    color: white;
+}
 
-        /* Bo góc + bóng nhẹ */
-        .table {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
+.order-table th,
+.order-table td {
+    vertical-align: middle;
+    padding: 10px 12px;
+}
+
+/* ========================
+   BADGE TRẠNG THÁI
+========================= */
+
+
+/* Đang xử lý */
+.badge-processing {
+    background-color: #ffcc80;
+    color: #663300;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đã thanh toán */
+.badge-paid {
+    background-color: #ff9966;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đang giao */
+.badge-shipping {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Đã giao */
+.badge-finished {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+/* Hủy / Lỗi */
+.badge-failed {
+    background-color: #dc3545;
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
     </style>
 </head>
 
@@ -62,9 +111,11 @@
     <jsp:include page="header.jsp" />
 
     <div class="container mt-5">
-        <h2 class="mb-4">Quản Lý Đơn Hàng</h2>
+        <h2 class="mb-4 page-title">Quản Lý Đơn Hàng</h2>
+
         
-        <table class="table table-bordered table-hover">
+        <table class="table table-bordered table-hover order-table">
+
             <thead>
                 <tr>
                     <th scope="col">Mã ĐH</th>
@@ -94,27 +145,33 @@
                         <td>
                             <c:choose>
                                 <c:when test="${o.trangThai == 'Đang xử lý'}">
-                                    <span class="badge badge-warning-custom">${o.trangThai}</span>
-                                </c:when>
+    <span class="badge badge-processing">${o.trangThai}</span>
+</c:when>
 
-                                <c:when test="${o.trangThai == 'Da Thanh Toan'}">
-                                    <span class="badge badge-info-custom">${o.trangThai}</span>
-                                </c:when>
+<c:when test="${o.trangThai == 'Đã Thanh Toán'}">
+    <span class="badge badge-paid">${o.trangThai}</span>
+</c:when>
 
-                                <c:when test="${o.trangThai == 'Đã giao'}">
-                                    <span class="badge bg-success">${o.trangThai}</span>
-                                </c:when>
+<c:when test="${o.trangThai == 'Đang giao'}">
+    <span class="badge badge-shipping">${o.trangThai}</span>
+</c:when>
 
-                                <c:otherwise>
-                                    <span class="badge bg-danger">${o.trangThai}</span>
-                                </c:otherwise>
+<c:when test="${o.trangThai == 'Đã giao'}">
+    <span class="badge badge-finished">${o.trangThai}</span>
+</c:when>
+
+<c:otherwise>
+    <span class="badge badge-failed">${o.trangThai}</span>
+</c:otherwise>
+
                             </c:choose>
                         </td>
 
                         <td>
-                            <a href="manage-order?action=view&id=${o.maDonHang}" class="btn btn-primary btn-sm">
-                                Xem
-                            </a>
+                            <a href="manage-order?action=view&id=${o.maDonHang}" class="btn-order-view text-white">
+    Xem
+</a>
+
                         </td>
                     </tr>
                 </c:forEach>
